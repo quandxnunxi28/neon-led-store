@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
   CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
-  Heart, Star, Feather, Zap, Upload 
+  Heart, Star, Feather, Zap, Upload, Power 
 } from 'lucide-react';
 import './App.css';
 
@@ -11,10 +11,17 @@ export default function App() {
   const [customText, setCustomText] = useState('Chill');
   const [customColor, setCustomColor] = useState('cyan');
   const [customFont, setCustomFont] = useState('Dancing Script');
-  const [customIcon, setCustomIcon] = useState('Feather'); // Chọn hình mặc định là Cánh
-  const [customNote, setCustomNote] = useState(''); // Ghi chú thêm
-  const [customerPhone, setCustomerPhone] = useState(''); // SĐT của khách
-  const [customImage, setCustomImage] = useState(null); // State cho việc upload ảnh
+  const [customIcon, setCustomIcon] = useState('Feather');
+  const [customImage, setCustomImage] = useState(null);
+  
+  // 4 STATE MỚI CHO TÍNH NĂNG NÂNG CAO
+  const [isLightOn, setIsLightOn] = useState(true); // Công tắc bật/tắt
+  const [bgType, setBgType] = useState('brick'); // Phông nền (brick, greenery, dark, concrete)
+  const [backing, setBacking] = useState('none'); // Khung mica (none, cut, square)
+  const [layout, setLayout] = useState('top'); // Vị trí hình so với chữ (top, bottom, left, right)
+
+  const [customNote, setCustomNote] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
 
   // State cho Form liên hệ chung
   const [formData, setFormData] = useState({ name: '', phone: '', request: '' });
@@ -46,25 +53,24 @@ export default function App() {
       return;
     }
 
-    const imageNote = customImage 
-      ? "\n- [LƯU Ý]: Tôi có tải lên 1 ảnh mẫu trên web. Tôi sẽ gửi ảnh đó ngay dưới tin nhắn này!" 
-      : "";
+    const imageNote = customImage ? "\n- [LƯU Ý]: Có tải ảnh mẫu trên web, sẽ gửi ngay bên dưới!" : "";
 
-    const message = `Chào xưởng, tôi muốn đặt làm đèn Neon:
-- Nội dung chữ: "${customText}"
-- Hình/Icon: ${customIcon !== 'None' ? customIcon : 'Dùng ảnh tự tải lên'}
-- Font chữ: ${customFont}
-- Màu sắc: ${customColor}
-- SĐT của tôi: ${customerPhone}
+    const message = `Chào xưởng, tôi đặt đèn Neon (Tự thiết kế web):
+- Chữ: "${customText}" (Font: ${customFont}, Màu: ${customColor})
+- Hình: ${customIcon !== 'None' ? customIcon : 'Dùng ảnh tải lên'}
+- Vị trí hình: ${layout}
+- Khung Mica: ${backing === 'none' ? 'Không viền' : backing === 'cut' ? 'Cắt theo viền' : 'Nguyên tấm vuông'}
+- SĐT: ${customerPhone}
 - Ghi chú: ${customNote ? customNote : 'Không có'}${imageNote}`;
 
     try {
-      // Tự động copy nội dung vào bộ nhớ điện thoại
       await navigator.clipboard.writeText(message);
       alert("✅ Đã copy thông tin đơn hàng!\n\nKhi Zalo mở lên, bạn chỉ cần nhấn giữ ô chat và chọn 'Dán' (Paste) để gửi cho xưởng nhé.");
-    } catch (err) {
-      console.log("Trình duyệt không hỗ trợ tự động copy");
-    }
+    } catch (err) {}
+
+    const encodedMessage = encodeURIComponent(message);
+    window.location.href = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
+  };
 
     // Mở Zalo (Vẫn truyền text để dự phòng cho máy Android)
     const encodedMessage = encodeURIComponent(message);
@@ -156,72 +162,96 @@ export default function App() {
       </section>
 
       {/* Phòng thử Neon - Tính năng đinh của web */}
+      {/* Phòng thử Neon - Tính năng nâng cao */}
       <section id="custom-neon" className="section dark-bg">
         <div className="section-header">
           <h2 className="section-title">TỰ THIẾT KẾ NEON THEO Ý BẠN</h2>
-          <p className="section-desc">Kết hợp chữ và biểu tượng để tạo ra thiết kế độc nhất!</p>
+          <p className="section-desc">Trải nghiệm bật/tắt đèn và ướm thử lên các phông nền thực tế!</p>
         </div>
 
         <div className="customizer-container">
-          {/* Màn hình hiển thị chữ & Hình */}
-          <div className="preview-board">
-            <div className={`neon-preview-wrapper text-${customColor}`}>
-              
-              {/* Hiển thị ảnh Upload nếu có */}
-              {customImage ? (
-                <img 
-                  src={customImage} 
-                  alt="Mẫu upload" 
-                  className="uploaded-neon-img" 
-                />
-              ) : (
-                /* Nếu không có ảnh upload thì hiển thị Icon mặc định */
-                <>
-                  {customIcon === 'Heart' && <Heart size={64} className="neon-icon" />}
-                  {customIcon === 'Star' && <Star size={64} className="neon-icon" />}
-                  {customIcon === 'Feather' && <Feather size={64} className="neon-icon" />}
-                  {customIcon === 'Zap' && <Zap size={64} className="neon-icon" />}
-                </>
-              )}
-              
-              <div 
-                className="neon-preview-text"
-                style={{ fontFamily: `"${customFont}", cursive` }}
+          {/* Màn hình hiển thị */}
+          <div className="preview-section">
+            <div className={`preview-board bg-${bgType}`}>
+              {/* Nút bật tắt đèn */}
+              <button 
+                className={`power-btn ${isLightOn ? 'on' : 'off'}`} 
+                onClick={() => setIsLightOn(!isLightOn)}
+                title="Bật/Tắt điện"
               >
-                {customText || 'Nhập chữ...'}
+                <Power size={24} />
+              </button>
+
+              {/* Khối Mica và Bố cục */}
+              <div className={`neon-preview-wrapper layout-${layout} backing-${backing} ${!isLightOn ? 'is-off' : ''} text-${customColor}`}>
+                
+                {/* Phần Hình ảnh */}
+                <div className="preview-image-part">
+                  {customImage ? (
+                    <img src={customImage} alt="Mẫu upload" className="uploaded-neon-img" />
+                  ) : (
+                    <>
+                      {customIcon === 'Heart' && <Heart size={64} className="neon-icon" />}
+                      {customIcon === 'Star' && <Star size={64} className="neon-icon" />}
+                      {customIcon === 'Feather' && <Feather size={64} className="neon-icon" />}
+                      {customIcon === 'Zap' && <Zap size={64} className="neon-icon" />}
+                    </>
+                  )}
+                </div>
+                
+                {/* Phần Chữ */}
+                <div 
+                  className="neon-preview-text"
+                  style={{ fontFamily: `"${customFont}", cursive` }}
+                >
+                  {customText || 'Nhập chữ...'}
+                </div>
+              </div>
+            </div>
+
+            {/* Các nút tùy chỉnh nhanh (Phông nền, Mica, Vị trí) */}
+            <div className="quick-tools">
+              <div className="tool-group">
+                <span className="tool-label">Phông nền:</span>
+                <button className={bgType === 'brick' ? 'active' : ''} onClick={() => setBgType('brick')}>Tường gạch</button>
+                <button className={bgType === 'greenery' ? 'active' : ''} onClick={() => setBgType('greenery')}>Tường cỏ</button>
+                <button className={bgType === 'concrete' ? 'active' : ''} onClick={() => setBgType('concrete')}>Bê tông</button>
+                <button className={bgType === 'dark' ? 'active' : ''} onClick={() => setBgType('dark')}>Tối giản</button>
+              </div>
+
+              <div className="tool-group">
+                <span className="tool-label">Khung Mica:</span>
+                <button className={backing === 'none' ? 'active' : ''} onClick={() => setBacking('none')}>Trong suốt</button>
+                <button className={backing === 'cut' ? 'active' : ''} onClick={() => setBacking('cut')}>Cắt viền chữ</button>
+                <button className={backing === 'square' ? 'active' : ''} onClick={() => setBacking('square')}>Nguyên tấm</button>
+              </div>
+
+              <div className="tool-group">
+                <span className="tool-label">Vị trí Hình:</span>
+                <button className={layout === 'top' ? 'active' : ''} onClick={() => setLayout('top')}>Ở trên</button>
+                <button className={layout === 'bottom' ? 'active' : ''} onClick={() => setLayout('bottom')}>Ở dưới</button>
+                <button className={layout === 'left' ? 'active' : ''} onClick={() => setLayout('left')}>Trái</button>
+                <button className={layout === 'right' ? 'active' : ''} onClick={() => setLayout('right')}>Phải</button>
               </div>
             </div>
           </div>
 
-          {/* Bảng điều khiển */}
+          {/* Bảng điều khiển nhập liệu */}
           <div className="controls-board">
             <div className="control-group">
               <label>1. Dòng chữ của bạn:</label>
-              <input 
-                type="text" 
-                maxLength="20"
-                value={customText}
-                onChange={(e) => setCustomText(e.target.value)}
-                placeholder="VD: Quán Của Tuấn"
-              />
+              <input type="text" maxLength="25" value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder="VD: Quán Của Tuấn"/>
             </div>
 
             <div className="control-group">
-              <label>2. Hình biểu tượng hoặc Ảnh của bạn:</label>
+              <label>2. Hình biểu tượng / Ảnh tải lên:</label>
               <div className="icon-picker">
                 <button className={`icon-btn ${customIcon === 'None' && !customImage ? 'active' : ''}`} onClick={() => {setCustomIcon('None'); setCustomImage(null);}}>Không có</button>
                 <button className={`icon-btn ${customIcon === 'Heart' ? 'active' : ''}`} onClick={() => {setCustomIcon('Heart'); setCustomImage(null);}}><Heart size={20}/></button>
                 <button className={`icon-btn ${customIcon === 'Star' ? 'active' : ''}`} onClick={() => {setCustomIcon('Star'); setCustomImage(null);}}><Star size={20}/></button>
-                
-                {/* Nút Upload File ẩn, dùng nhãn label để kích hoạt */}
                 <label className="icon-btn upload-btn">
                   <Upload size={20} /> Tải ảnh lên
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleImageUpload} 
-                    style={{ display: 'none' }} 
-                  />
+                  <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
                 </label>
               </div>
             </div>
@@ -230,49 +260,35 @@ export default function App() {
               <label>3. Chọn màu sắc:</label>
               <div className="color-picker">
                 {['pink', 'cyan', 'yellow', 'purple', 'white', 'red', 'green'].map(color => (
-                  <button 
-                    key={color}
-                    className={`color-btn bg-${color} ${customColor === color ? 'active' : ''}`}
-                    onClick={() => setCustomColor(color)}
-                    title={`Màu ${color}`}
-                  ></button>
+                  <button key={color} className={`color-btn bg-${color} ${customColor === color ? 'active' : ''}`} onClick={() => setCustomColor(color)}></button>
                 ))}
               </div>
             </div>
 
             <div className="control-group">
-              <label>4. Chọn phông chữ:</label>
+              <label>4. Chọn phông chữ nghệ thuật:</label>
               <select value={customFont} onChange={(e) => setCustomFont(e.target.value)}>
                 <option value="Dancing Script">Dancing Script (Mềm mại)</option>
                 <option value="Pacifico">Pacifico (Đậm đà)</option>
                 <option value="Vibur">Vibur (Cổ điển)</option>
+                <option value="Caveat">Caveat (Phá cách)</option>
+                <option value="Cookie">Cookie (Dễ thương)</option>
+                <option value="Great Vibes">Great Vibes (Sang trọng)</option>
+                <option value="Kaushan Script">Kaushan Script (Cứng cáp)</option>
+                <option value="Sacramento">Sacramento (Thanh mảnh)</option>
+                <option value="Satisfy">Satisfy (Bay bổng)</option>
+                <option value="Yellowtail">Yellowtail (Độc đáo)</option>
               </select>
             </div>
 
             <div className="control-group">
-              <label>5. Ghi chú thêm (Kích thước, yêu cầu khác):</label>
-              <textarea 
-                rows="2"
-                value={customNote}
-                onChange={(e) => setCustomNote(e.target.value)}
-                placeholder="VD: Mình muốn làm ngang 1 mét, lấy gấp trong ngày..."
-                style={{ marginBottom: '10px' }}
-              ></textarea>
-            </div>
-
-            <div className="control-group">
-              <label>6. Số điện thoại / Zalo của bạn (*):</label>
-              <input 
-                type="tel" 
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                placeholder="Nhập SĐT để xưởng liên hệ chốt mẫu..."
-                style={{ borderColor: !customerPhone ? 'var(--neon-pink)' : 'var(--border-color)' }}
-              />
+              <label>5. Ghi chú & Zalo liên hệ (*):</label>
+              <textarea rows="2" value={customNote} onChange={(e) => setCustomNote(e.target.value)} placeholder="VD: Mình muốn làm ngang 1 mét..." style={{ marginBottom: '10px' }}></textarea>
+              <input type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Nhập SĐT / Zalo của bạn..." style={{ borderColor: !customerPhone ? 'var(--neon-pink)' : 'var(--border-color)' }} />
             </div>
 
             <button className="btn btn-submit" onClick={handleSendToZalo}>
-              Gửi Mẫu Này Nhận Báo Giá (Qua Zalo)
+              Lưu Thiết Kế & Chốt Qua Zalo
             </button>
           </div>
         </div>
