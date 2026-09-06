@@ -59,7 +59,7 @@ export default function App() {
 
     const encodedMessage = encodeURIComponent(message);
     const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
-    window.open(zaloLink, '_blank');
+    window.location.href = zaloLink;
   };
 
   // Hàm xử lý Form liên hệ dưới cùng
