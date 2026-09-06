@@ -27,7 +27,7 @@ export default function App() {
   const [formData, setFormData] = useState({ name: '', phone: '', request: '' });
   const [submitted, setSubmitted] = useState(false);
 
-  // Số điện thoại / Zalo (đã thay số thật)
+  // Số điện thoại / Zalo
   const HOTLINE = "0984115697";
   const ZALO_URL = `https://zalo.me/${HOTLINE}`;
 
@@ -45,7 +45,6 @@ export default function App() {
     }
   };
 
-  // Hàm gửi thiết kế Neon qua Zalo
   // Hàm gửi thiết kế Neon qua Zalo (Đã fix lỗi Zalo iPhone)
   const handleSendToZalo = async () => {
     if (!customerPhone) {
@@ -70,12 +69,6 @@ export default function App() {
 
     const encodedMessage = encodeURIComponent(message);
     window.location.href = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
-  };
-
-    // Mở Zalo (Vẫn truyền text để dự phòng cho máy Android)
-    const encodedMessage = encodeURIComponent(message);
-    const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
-    window.location.href = zaloLink;
   };
 
   // Hàm xử lý Form liên hệ dưới cùng
@@ -161,7 +154,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Phòng thử Neon - Tính năng đinh của web */}
       {/* Phòng thử Neon - Tính năng nâng cao */}
       <section id="custom-neon" className="section dark-bg">
         <div className="section-header">
