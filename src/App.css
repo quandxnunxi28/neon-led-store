@@ -723,3 +723,10 @@ body {
 .bg-white { background-color: #ffffff !important; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
 .bg-red { background-color: #ff0000 !important; box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
 .bg-green { background-color: #00ff00 !important; box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+h1, h2, h3, h4, h5, h6, .section-title {
+  color: #ffffff !important;
+}
+
+.section-desc {
+  color: #cbd5e1 !important;
+}
