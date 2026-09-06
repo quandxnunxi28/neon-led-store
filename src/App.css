@@ -715,3 +715,11 @@ body {
   .nav-links { display: none; }
   .navbar { justify-content: center; }
 }
+/* Màu nền cho các nút chọn màu */
+.bg-pink { background-color: #ff007f !important; box-shadow: 0 0 10px rgba(255, 0, 127, 0.5); }
+.bg-cyan { background-color: #00f0ff !important; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+.bg-yellow { background-color: #ffea00 !important; box-shadow: 0 0 10px rgba(255, 234, 0, 0.5); }
+.bg-purple { background-color: #9d4edd !important; box-shadow: 0 0 10px rgba(157, 78, 221, 0.5); }
+.bg-white { background-color: #ffffff !important; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+.bg-red { background-color: #ff0000 !important; box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+.bg-green { background-color: #00ff00 !important; box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
