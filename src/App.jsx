@@ -12,7 +12,6 @@ const blogPosts = [
     id: 1,
     title: "5 Ý Tưởng Trang Trí Phòng Ngủ Bằng Đèn Neon Cực Chill",
     date: "05/09/2026",
-    // Link ảnh này sẽ trỏ thẳng vào thư mục public/blog/anh1.jpg của bạn
     image: "/blog/anh1.jpg", 
     excerpt: "Khám phá cách biến không gian phòng ngủ của bạn thành một góc nghệ thuật rực rỡ với đèn Neon uốn dẻo...",
     content: "Đèn neon không chỉ dùng cho quán cafe. Ngày nay, việc đặt một câu quote ý nghĩa hoặc hình ảnh ngộ nghĩnh trên đầu giường đang là xu hướng..."
@@ -28,7 +27,6 @@ const blogPosts = [
 ];
 
 export default function App() {
-  // Quản lý việc chuyển trang: 'home' hoặc 'blog'
   const [currentPage, setCurrentPage] = useState('home');
   
   // State cho tính năng Thiết kế Neon
@@ -38,34 +36,35 @@ export default function App() {
   const [customIcon, setCustomIcon] = useState('Feather');
   const [customImage, setCustomImage] = useState(null);
   
-  // 4 STATE MỚI CHO TÍNH NĂNG NÂNG CAO
-  const [isLightOn, setIsLightOn] = useState(true); // Công tắc bật/tắt
-  const [bgType, setBgType] = useState('brick'); // Phông nền
-  const [backing, setBacking] = useState('none'); // Khung mica
-  const [layout, setLayout] = useState('top'); // Vị trí hình so với chữ
+  const [isLightOn, setIsLightOn] = useState(true); 
+  const [bgType, setBgType] = useState('brick'); 
+  const [backing, setBacking] = useState('none'); 
+  const [layout, setLayout] = useState('top'); 
 
   const [customNote, setCustomNote] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
 
-  // State cho Form liên hệ chung
-  const [formData, setFormData] = useState({ name: '', phone: '', request: '' });
-  const [submitted, setSubmitted] = useState(false);
+  // CẬP NHẬT: Thêm trường 'type' vào Form liên hệ
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    phone: '', 
+    type: 'Làm theo yêu cầu tự điền', // Mặc định
+    request: '' 
+  });
 
-  // Số điện thoại / Zalo
   const HOTLINE = "0984115697";
   const ZALO_URL = `https://zalo.me/${HOTLINE}`;
 
-  // Hàm xử lý tải ảnh lên
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setCustomImage(imageUrl);
-      setCustomIcon('None'); // Tắt icon mặc định nếu khách dùng ảnh của họ
+      setCustomIcon('None'); 
     }
   };
 
-  // Hàm gửi thiết kế Neon qua Zalo
+  // Hàm gửi Zalo cho khu vực "Phòng Thử Neon"
   const handleSendToZalo = async () => {
     if (!customerPhone) {
       alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
@@ -91,14 +90,28 @@ export default function App() {
     window.location.href = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
   };
 
-  // Hàm xử lý Form liên hệ dưới cùng
-  const handleSubmit = (e) => {
+  // CẬP NHẬT: Hàm xử lý Form liên hệ (Áp dụng copy & Zalo tương tự)
+  const handleSubmitContactForm = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
       alert("Vui lòng nhập họ tên và số điện thoại!");
       return;
     }
-    setSubmitted(true);
+
+    // Soạn tin nhắn chuẩn bị gửi Zalo
+    const message = `Chào xưởng, tôi cần tư vấn làm biển đèn:
+- Họ và tên: ${formData.name}
+- SĐT liên hệ: ${formData.phone}
+- Phân loại: ${formData.type}
+- Nội dung yêu cầu: ${formData.request ? formData.request : 'Nhờ xưởng tư vấn thêm cho tôi.'}`;
+
+    try {
+      await navigator.clipboard.writeText(message);
+      alert("✅ Đã copy thông tin liên hệ!\n\nKhi Zalo mở lên, bạn chỉ cần nhấn giữ ô chat và chọn 'Dán' (Paste) để gửi cho xưởng nhé.");
+    } catch (err) {}
+
+    const encodedMessage = encodeURIComponent(message);
+    window.location.href = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
   };
 
   const services = [
@@ -296,7 +309,7 @@ export default function App() {
             </div>
           </section>
 
-          {/* Các mục khác */}
+          {/* Cam kết / Ưu điểm */}
           <section className="features">
             <div className="feature-item"><ShieldCheck size={28} className="feat-icon" /><div><h4>Bảo hành nguồn & LED</h4><p>Bảo hành 12 tháng lỗi 1 đổi 1</p></div></div>
             <div className="feature-item"><Lightbulb size={28} className="feat-icon" /><div><h4>Lên demo 3D trước</h4><p>Khách duyệt mẫu vẽ mới tiến hành cắt mica</p></div></div>
@@ -337,26 +350,65 @@ export default function App() {
             </div>
           </section>
 
+          {/* --- CẬP NHẬT GIAO DIỆN FORM LIÊN HỆ DƯỚI CÙNG --- */}
           <section id="contact" className="section form-section">
             <div className="form-container">
               <div className="form-left">
-                <h2>BẠN CẦN LÀM BIỂN ĐÈN CHO MỤC ĐÍCH GÌ?</h2><p>Hãy để lại thông tin, xưởng sẽ liên hệ gửi catalog và tư vấn kích thước.</p>
+                <h2>BẠN CẦN LÀM BIỂN ĐÈN CHO MỤC ĐÍCH GÌ?</h2>
+                <p>Hãy để lại thông tin, xưởng sẽ liên hệ gửi catalog và tư vấn chi tiết nhất.</p>
                 <div className="contact-direct">
-                  <div className="direct-item"><Phone className="direct-icon" /><div><span>Gọi trực tiếp hotline:</span><strong>{HOTLINE}</strong></div></div>
-                  <div className="direct-item"><MessageCircle className="direct-icon" /><div><span>Hỗ trợ thiết kế Zalo:</span><a href={ZALO_URL} target="_blank" rel="noreferrer">Chat ngay tại Zalo</a></div></div>
+                  <div className="direct-item">
+                    <Phone className="direct-icon" />
+                    <div><span>Gọi trực tiếp hotline:</span><strong>{HOTLINE}</strong></div>
+                  </div>
+                  <div className="direct-item">
+                    <MessageCircle className="direct-icon" />
+                    <div><span>Hỗ trợ thiết kế Zalo:</span><a href={ZALO_URL} target="_blank" rel="noreferrer">Chat ngay tại Zalo</a></div>
+                  </div>
                 </div>
               </div>
               <div className="form-right">
-                {submitted ? (
-                  <div className="success-box"><CheckCircle2 size={56} className="success-icon" /><h3>Đã nhận thông tin thành công!</h3><p>Xưởng sẽ liên hệ lại qua số <strong>{formData.phone}</strong>.</p></div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="contact-form">
-                    <label>Họ và tên của bạn</label><input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
-                    <label>Số điện thoại / Zalo</label><input type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} required />
-                    <label>Nội dung muốn làm</label><textarea rows="3" value={formData.request} onChange={(e) => setFormData({...formData, request: e.target.value})}></textarea>
-                    <button type="submit" className="btn btn-submit">Gửi Yêu Cầu Tư Vấn Ngay</button>
-                  </form>
-                )}
+                <form onSubmit={handleSubmitContactForm} className="contact-form">
+                  <label>Họ và tên của bạn</label>
+                  <input 
+                    type="text" 
+                    placeholder="VD: Anh Tuấn"
+                    value={formData.name} 
+                    onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                    required 
+                  />
+
+                  <label>Số điện thoại / Zalo</label>
+                  <input 
+                    type="tel" 
+                    placeholder="VD: 0988xxxxxx"
+                    value={formData.phone} 
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})} 
+                    required 
+                  />
+
+                  {/* THÊM MỚI: Tùy chọn Mẫu có sẵn hoặc Tự điền */}
+                  <label>Loại yêu cầu</label>
+                  <select 
+                    value={formData.type} 
+                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  >
+                    <option value="Làm theo yêu cầu tự điền">Làm theo yêu cầu tự điền</option>
+                    <option value="Tư vấn mẫu có sẵn trên web">Tư vấn mẫu có sẵn trên web</option>
+                  </select>
+
+                  <label>Nội dung muốn làm (Mã mẫu hoặc chi tiết yêu cầu...)</label>
+                  <textarea 
+                    rows="3" 
+                    placeholder="VD: Mình cần làm biển chữ 'Coffee Chill' ngang 80cm..."
+                    value={formData.request} 
+                    onChange={(e) => setFormData({...formData, request: e.target.value})}
+                  ></textarea>
+
+                  <button type="submit" className="btn btn-submit">
+                    Gửi Yêu Cầu Tư Vấn Qua Zalo
+                  </button>
+                </form>
               </div>
             </div>
           </section>
@@ -382,12 +434,17 @@ export default function App() {
                   <span className="blog-date">{post.date}</span>
                   <h3 className="blog-title">{post.title}</h3>
                   <p className="blog-excerpt">{post.excerpt}</p>
+                  
+                  {/* CẬP NHẬT: Khi bấm tư vấn, tự động gán Type là "Mẫu có sẵn" */}
                   <button 
                     className="read-more-btn"
                     onClick={() => {
-                      setFormData({...formData, request: `Tôi muốn tư vấn về bài viết: ${post.title}`});
+                      setFormData({
+                        ...formData, 
+                        type: 'Tư vấn mẫu có sẵn trên web',
+                        request: `Tôi muốn tư vấn về mẫu trong bài viết: "${post.title}"`
+                      });
                       setCurrentPage('home');
-                      // Đợi giao diện render xong mới scroll
                       setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 100);
                     }}
                   >
