@@ -15,6 +15,14 @@ import {
 import './App.css';
 
 export default function App() {
+  // State cho tính năng Thiết kế Neon
+  const [customText, setCustomText] = useState('Happy Birthday');
+  const [customColor, setCustomColor] = useState('pink');
+  const [customFont, setCustomFont] = useState('Dancing Script');
+  
+  // Công thức tính giá: Giả sử 120.000đ / 1 ký tự (có thể tùy chỉnh)
+  const pricePerChar = 120000;
+  const estimatedPrice = customText.replace(/\s/g, '').length * pricePerChar; // Không tính dấu cách
   const [formData, setFormData] = useState({ name: '', phone: '', request: '' });
   const [submitted, setSubmitted] = useState(false);
 
@@ -103,7 +111,78 @@ export default function App() {
           </div>
         </div>
       </section>
+{/* Phòng thử Neon - Tính năng đinh của web */}
+      <section id="custom-neon" className="section dark-bg">
+        <div className="section-header">
+          <h2 className="section-title">TỰ THIẾT KẾ NEON THEO Ý BẠN</h2>
+          <p className="section-desc">Gõ chữ bạn muốn, chọn màu và xem giá dự kiến ngay lập tức!</p>
+        </div>
 
+        <div className="customizer-container">
+          {/* Màn hình hiển thị chữ */}
+          <div className="preview-board">
+            <div 
+              className={`neon-preview-text text-${customColor}`}
+              style={{ fontFamily: `"${customFont}", cursive` }}
+            >
+              {customText || 'Nhập chữ của bạn...'}
+            </div>
+          </div>
+
+          {/* Bảng điều khiển */}
+          <div className="controls-board">
+            <div className="control-group">
+              <label>Dòng chữ của bạn:</label>
+              <input 
+                type="text" 
+                maxLength="30"
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                placeholder="VD: Happy Birthday"
+              />
+            </div>
+
+            <div className="control-group">
+              <label>Chọn màu sắc:</label>
+              <div className="color-picker">
+                {['pink', 'cyan', 'yellow', 'purple', 'white', 'red', 'green'].map(color => (
+                  <button 
+                    key={color}
+                    className={`color-btn bg-${color} ${customColor === color ? 'active' : ''}`}
+                    onClick={() => setCustomColor(color)}
+                    title={`Màu ${color}`}
+                  ></button>
+                ))}
+              </div>
+            </div>
+
+            <div className="control-group">
+              <label>Chọn phông chữ:</label>
+              <select value={customFont} onChange={(e) => setCustomFont(e.target.value)}>
+                <option value="Dancing Script">Dancing Script (Mềm mại)</option>
+                <option value="Pacifico">Pacifico (Đậm đà)</option>
+                <option value="Vibur">Vibur (Cổ điển)</option>
+              </select>
+            </div>
+
+            <div className="price-estimate">
+              <span>Tạm tính (Tham khảo):</span>
+              <strong>{estimatedPrice.toLocaleString('vi-VN')} VNĐ</strong>
+              <p className="price-note">*Giá đã bao gồm mica trong suốt và nguồn 12V. Miễn phí ship.</p>
+            </div>
+
+            <button 
+              className="btn btn-submit"
+              onClick={() => {
+                setFormData({...formData, request: `Tôi muốn đặt mẫu chữ: "${customText}", Font: ${customFont}, Màu: ${customColor}. Vui lòng tư vấn!`});
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Chốt mẫu này & Đặt hàng
+            </button>
+          </div>
+        </div>
+      </section>
       {/* Cam kết / Ưu điểm */}
       <section className="features">
         <div className="feature-item">
