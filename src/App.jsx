@@ -39,7 +39,8 @@ export default function App() {
   };
 
   // Hàm gửi thiết kế Neon qua Zalo
-  const handleSendToZalo = () => {
+  // Hàm gửi thiết kế Neon qua Zalo (Đã fix lỗi Zalo iPhone)
+  const handleSendToZalo = async () => {
     if (!customerPhone) {
       alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
       return;
@@ -57,6 +58,15 @@ export default function App() {
 - SĐT của tôi: ${customerPhone}
 - Ghi chú: ${customNote ? customNote : 'Không có'}${imageNote}`;
 
+    try {
+      // Tự động copy nội dung vào bộ nhớ điện thoại
+      await navigator.clipboard.writeText(message);
+      alert("✅ Đã copy thông tin đơn hàng!\n\nKhi Zalo mở lên, bạn chỉ cần nhấn giữ ô chat và chọn 'Dán' (Paste) để gửi cho xưởng nhé.");
+    } catch (err) {
+      console.log("Trình duyệt không hỗ trợ tự động copy");
+    }
+
+    // Mở Zalo (Vẫn truyền text để dự phòng cho máy Android)
     const encodedMessage = encodeURIComponent(message);
     const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
     window.location.href = zaloLink;
