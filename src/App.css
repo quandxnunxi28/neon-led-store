@@ -730,3 +730,116 @@ h1, h2, h3, h4, h5, h6, .section-title {
 .section-desc {
   color: #cbd5e1 !important;
 }
+/* =========================================
+   BLOG PAGE STYLES
+   ========================================= */
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+}
+.nav-btn:hover { color: var(--neon-cyan); }
+
+.blog-page {
+  padding-top: 40px;
+  min-height: 80vh;
+}
+.blog-header {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative;
+}
+.btn-back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-back:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--neon-pink); }
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+.blog-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+.blog-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.blog-image-wrapper {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: #000;
+}
+.blog-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.5s;
+}
+.blog-card:hover .blog-img { transform: scale(1.05); }
+
+.blog-content {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.blog-date {
+  font-size: 0.85rem;
+  color: var(--neon-cyan);
+  margin-bottom: 10px;
+  display: block;
+}
+.blog-title {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+.blog-excerpt {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  flex: 1;
+}
+.read-more-btn {
+  background: transparent;
+  color: var(--neon-pink);
+  border: 1px solid var(--neon-pink);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+.read-more-btn:hover { background: var(--neon-pink); color: #fff; }
+
+@media (max-width: 768px) {
+  .btn-back { position: relative; margin-bottom: 20px; }
+}
