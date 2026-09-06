@@ -2,40 +2,43 @@ import React, { useState } from 'react';
 import { 
   Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
   CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
-  Heart, Star, Feather, Zap, Upload  // <-- Thêm các icon hình dáng vào đây
-} from 'lucide-react';
-import { 
-  Sparkles, 
-  Lightbulb, 
-  Box, 
-  Camera, 
-  Phone, 
-  MessageCircle, 
-  CheckCircle2, 
-  ChevronRight, 
-  Flame, 
-  ShieldCheck, 
-  Truck 
+  Heart, Star, Feather, Zap, Upload 
 } from 'lucide-react';
 import './App.css';
 
-
 export default function App() {
-  // State mới cho việc upload ảnh
-  const [customImage, setCustomImage] = useState(null);
+  // State cho tính năng Thiết kế Neon
+  const [customText, setCustomText] = useState('Chill');
+  const [customColor, setCustomColor] = useState('cyan');
+  const [customFont, setCustomFont] = useState('Dancing Script');
+  const [customIcon, setCustomIcon] = useState('Feather'); // Chọn hình mặc định là Cánh
+  const [customNote, setCustomNote] = useState(''); // Ghi chú thêm
+  const [customerPhone, setCustomerPhone] = useState(''); // SĐT của khách
+  const [customImage, setCustomImage] = useState(null); // State cho việc upload ảnh
 
-  // Hàm xử lý tải ảnh lên (chỉ hiển thị cục bộ trên trình duyệt)
+  // State cho Form liên hệ chung
+  const [formData, setFormData] = useState({ name: '', phone: '', request: '' });
+  const [submitted, setSubmitted] = useState(false);
+
+  // Số điện thoại / Zalo (đã thay số thật)
+  const HOTLINE = "0984115697";
+  const ZALO_URL = `https://zalo.me/${HOTLINE}`;
+
+  // Công thức tính giá: Giả sử 120.000đ / 1 ký tự
+  const pricePerChar = 120000;
+  const estimatedPrice = customText.replace(/\s/g, '').length * pricePerChar;
+
+  // Hàm xử lý tải ảnh lên
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Tạo một URL tạm thời để hiển thị ảnh ngay lập tức
       const imageUrl = URL.createObjectURL(file);
       setCustomImage(imageUrl);
       setCustomIcon('None'); // Tắt icon mặc định nếu khách dùng ảnh của họ
     }
   };
 
-  // Cập nhật hàm gửi Zalo
+  // Hàm gửi thiết kế Neon qua Zalo
   const handleSendToZalo = () => {
     if (!customerPhone) {
       alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
@@ -58,26 +61,8 @@ export default function App() {
     const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
     window.open(zaloLink, '_blank');
   };
-  // State cho tính năng Thiết kế Neon
-  const [customText, setCustomText] = useState('Chill');
-  const [customColor, setCustomColor] = useState('cyan');
-  const [customFont, setCustomFont] = useState('Dancing Script');
-  const [customIcon, setCustomIcon] = useState('Feather'); // Chọn hình mặc định là Cánh
-  const [customNote, setCustomNote] = useState(''); // Ghi chú thêm
-  const [customerPhone, setCustomerPhone] = useState(''); // SĐT của khách
 
-
-  
-  // Công thức tính giá: Giả sử 120.000đ / 1 ký tự (có thể tùy chỉnh)
-  const pricePerChar = 120000;
-  const estimatedPrice = customText.replace(/\s/g, '').length * pricePerChar; // Không tính dấu cách
-  const [formData, setFormData] = useState({ name: '', phone: '', request: '' });
-  const [submitted, setSubmitted] = useState(false);
-
-  // Số điện thoại / Zalo anh của bạn (thay số thật vào đây)
-  const HOTLINE = "0984115697";
-  const ZALO_URL = `https://zalo.me/${HOTLINE}`;
-
+  // Hàm xử lý Form liên hệ dưới cùng
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
@@ -159,7 +144,7 @@ export default function App() {
           </div>
         </div>
       </section>
-{/* Phòng thử Neon - Tính năng đinh của web */}
+
       {/* Phòng thử Neon - Tính năng đinh của web */}
       <section id="custom-neon" className="section dark-bg">
         <div className="section-header">
@@ -168,7 +153,6 @@ export default function App() {
         </div>
 
         <div className="customizer-container">
-          {/* Màn hình hiển thị chữ & Hình */}
           {/* Màn hình hiển thị chữ & Hình */}
           <div className="preview-board">
             <div className={`neon-preview-wrapper text-${customColor}`}>
@@ -194,7 +178,7 @@ export default function App() {
                 className="neon-preview-text"
                 style={{ fontFamily: `"${customFont}", cursive` }}
               >
-                {customText}
+                {customText || 'Nhập chữ...'}
               </div>
             </div>
           </div>
@@ -247,17 +231,27 @@ export default function App() {
             </div>
 
             <div className="control-group">
-              <label>4. Ghi chú thêm (Kích thước, yêu cầu khác):</label>
+              <label>4. Chọn phông chữ:</label>
+              <select value={customFont} onChange={(e) => setCustomFont(e.target.value)}>
+                <option value="Dancing Script">Dancing Script (Mềm mại)</option>
+                <option value="Pacifico">Pacifico (Đậm đà)</option>
+                <option value="Vibur">Vibur (Cổ điển)</option>
+              </select>
+            </div>
+
+            <div className="control-group">
+              <label>5. Ghi chú thêm (Kích thước, yêu cầu khác):</label>
               <textarea 
                 rows="2"
                 value={customNote}
                 onChange={(e) => setCustomNote(e.target.value)}
                 placeholder="VD: Mình muốn làm ngang 1 mét, lấy gấp trong ngày..."
+                style={{ marginBottom: '10px' }}
               ></textarea>
             </div>
 
             <div className="control-group">
-              <label>5. Số điện thoại / Zalo của bạn (*):</label>
+              <label>6. Số điện thoại / Zalo của bạn (*):</label>
               <input 
                 type="tel" 
                 value={customerPhone}
@@ -273,6 +267,7 @@ export default function App() {
           </div>
         </div>
       </section>
+
       {/* Cam kết / Ưu điểm */}
       <section className="features">
         <div className="feature-item">
