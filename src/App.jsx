@@ -27,7 +27,7 @@ export default function App() {
   const [submitted, setSubmitted] = useState(false);
 
   // Số điện thoại / Zalo anh của bạn (thay số thật vào đây)
-  const HOTLINE = "0987654321";
+  const HOTLINE = "0984115697";
   const ZALO_URL = `https://zalo.me/${HOTLINE}`;
 
   const handleSubmit = (e) => {
