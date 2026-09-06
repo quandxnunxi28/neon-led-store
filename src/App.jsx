@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { 
+  Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
+  CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
+  Heart, Star, Feather, Zap // <-- Thêm các icon hình dáng vào đây
+} from 'lucide-react';
+import { 
   Sparkles, 
   Lightbulb, 
   Box, 
@@ -14,11 +19,39 @@ import {
 } from 'lucide-react';
 import './App.css';
 
+
 export default function App() {
   // State cho tính năng Thiết kế Neon
-  const [customText, setCustomText] = useState('Happy Birthday');
-  const [customColor, setCustomColor] = useState('pink');
+  const [customText, setCustomText] = useState('Chill');
+  const [customColor, setCustomColor] = useState('cyan');
   const [customFont, setCustomFont] = useState('Dancing Script');
+  const [customIcon, setCustomIcon] = useState('Feather'); // Chọn hình mặc định là Cánh
+  const [customNote, setCustomNote] = useState(''); // Ghi chú thêm
+  const [customerPhone, setCustomerPhone] = useState(''); // SĐT của khách
+
+  // Hàm xử lý khi bấm nút "Gửi qua Zalo"
+  const handleSendToZalo = () => {
+    if (!customerPhone) {
+      alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
+      return;
+    }
+
+    // Soạn sẵn nội dung tin nhắn
+    const message = `Chào xưởng, tôi muốn đặt làm đèn Neon:
+- Nội dung chữ: "${customText}"
+- Hình kèm theo: ${customIcon}
+- Font chữ: ${customFont}
+- Màu sắc: ${customColor}
+- SĐT của tôi: ${customerPhone}
+- Ghi chú thêm: ${customNote ? customNote : 'Không có'}`;
+
+    // Mã hóa tin nhắn để truyền qua URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Mở Zalo với nội dung điền sẵn (thay HOTLINE bằng số Zalo thực tế)
+    const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
+    window.open(zaloLink, '_blank');
+  };
   
   // Công thức tính giá: Giả sử 120.000đ / 1 ký tự (có thể tùy chỉnh)
   const pricePerChar = 120000;
@@ -112,38 +145,58 @@ export default function App() {
         </div>
       </section>
 {/* Phòng thử Neon - Tính năng đinh của web */}
+      {/* Phòng thử Neon - Tính năng đinh của web */}
       <section id="custom-neon" className="section dark-bg">
         <div className="section-header">
           <h2 className="section-title">TỰ THIẾT KẾ NEON THEO Ý BẠN</h2>
-          <p className="section-desc">Gõ chữ bạn muốn, chọn màu và xem giá dự kiến ngay lập tức!</p>
+          <p className="section-desc">Kết hợp chữ và biểu tượng để tạo ra thiết kế độc nhất!</p>
         </div>
 
         <div className="customizer-container">
-          {/* Màn hình hiển thị chữ */}
+          {/* Màn hình hiển thị chữ & Hình */}
           <div className="preview-board">
-            <div 
-              className={`neon-preview-text text-${customColor}`}
-              style={{ fontFamily: `"${customFont}", cursive` }}
-            >
-              {customText || 'Nhập chữ của bạn...'}
+            <div className={`neon-preview-wrapper text-${customColor}`}>
+              {/* Hiển thị Icon nếu có chọn */}
+              {customIcon === 'Heart' && <Heart size={64} className="neon-icon" />}
+              {customIcon === 'Star' && <Star size={64} className="neon-icon" />}
+              {customIcon === 'Feather' && <Feather size={64} className="neon-icon" />}
+              {customIcon === 'Zap' && <Zap size={64} className="neon-icon" />}
+              
+              <div 
+                className="neon-preview-text"
+                style={{ fontFamily: `"${customFont}", cursive` }}
+              >
+                {customText || 'Nhập chữ...'}
+              </div>
             </div>
           </div>
 
           {/* Bảng điều khiển */}
           <div className="controls-board">
             <div className="control-group">
-              <label>Dòng chữ của bạn:</label>
+              <label>1. Dòng chữ của bạn:</label>
               <input 
                 type="text" 
-                maxLength="30"
+                maxLength="20"
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
-                placeholder="VD: Happy Birthday"
+                placeholder="VD: Quán Của Tuấn"
               />
             </div>
 
             <div className="control-group">
-              <label>Chọn màu sắc:</label>
+              <label>2. Hình biểu tượng đi kèm:</label>
+              <div className="icon-picker">
+                <button className={`icon-btn ${customIcon === 'None' ? 'active' : ''}`} onClick={() => setCustomIcon('None')}>Không có</button>
+                <button className={`icon-btn ${customIcon === 'Heart' ? 'active' : ''}`} onClick={() => setCustomIcon('Heart')}><Heart size={20}/> Trái tim</button>
+                <button className={`icon-btn ${customIcon === 'Star' ? 'active' : ''}`} onClick={() => setCustomIcon('Star')}><Star size={20}/> Ngôi sao</button>
+                <button className={`icon-btn ${customIcon === 'Feather' ? 'active' : ''}`} onClick={() => setCustomIcon('Feather')}><Feather size={20}/> Cánh</button>
+                <button className={`icon-btn ${customIcon === 'Zap' ? 'active' : ''}`} onClick={() => setCustomIcon('Zap')}><Zap size={20}/> Tia chớp</button>
+              </div>
+            </div>
+
+            <div className="control-group">
+              <label>3. Chọn màu sắc:</label>
               <div className="color-picker">
                 {['pink', 'cyan', 'yellow', 'purple', 'white', 'red', 'green'].map(color => (
                   <button 
@@ -157,28 +210,28 @@ export default function App() {
             </div>
 
             <div className="control-group">
-              <label>Chọn phông chữ:</label>
-              <select value={customFont} onChange={(e) => setCustomFont(e.target.value)}>
-                <option value="Dancing Script">Dancing Script (Mềm mại)</option>
-                <option value="Pacifico">Pacifico (Đậm đà)</option>
-                <option value="Vibur">Vibur (Cổ điển)</option>
-              </select>
+              <label>4. Ghi chú thêm (Kích thước, yêu cầu khác):</label>
+              <textarea 
+                rows="2"
+                value={customNote}
+                onChange={(e) => setCustomNote(e.target.value)}
+                placeholder="VD: Mình muốn làm ngang 1 mét, lấy gấp trong ngày..."
+              ></textarea>
             </div>
 
-            <div className="price-estimate">
-              <span>Tạm tính (Tham khảo):</span>
-              <strong>{estimatedPrice.toLocaleString('vi-VN')} VNĐ</strong>
-              <p className="price-note">*Giá đã bao gồm mica trong suốt và nguồn 12V. Miễn phí ship.</p>
+            <div className="control-group">
+              <label>5. Số điện thoại / Zalo của bạn (*):</label>
+              <input 
+                type="tel" 
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                placeholder="Nhập SĐT để xưởng liên hệ chốt mẫu..."
+                style={{ borderColor: !customerPhone ? 'var(--neon-pink)' : 'var(--border-color)' }}
+              />
             </div>
 
-            <button 
-              className="btn btn-submit"
-              onClick={() => {
-                setFormData({...formData, request: `Tôi muốn đặt mẫu chữ: "${customText}", Font: ${customFont}, Màu: ${customColor}. Vui lòng tư vấn!`});
-                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Chốt mẫu này & Đặt hàng
+            <button className="btn btn-submit" onClick={handleSendToZalo}>
+              Gửi Mẫu Này Nhận Báo Giá (Qua Zalo)
             </button>
           </div>
         </div>
