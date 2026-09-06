@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
   CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
-  Heart, Star, Feather, Zap // <-- Thêm các icon hình dáng vào đây
+  Heart, Star, Feather, Zap, Upload  // <-- Thêm các icon hình dáng vào đây
 } from 'lucide-react';
 import { 
   Sparkles, 
@@ -21,6 +21,43 @@ import './App.css';
 
 
 export default function App() {
+  // State mới cho việc upload ảnh
+  const [customImage, setCustomImage] = useState(null);
+
+  // Hàm xử lý tải ảnh lên (chỉ hiển thị cục bộ trên trình duyệt)
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Tạo một URL tạm thời để hiển thị ảnh ngay lập tức
+      const imageUrl = URL.createObjectURL(file);
+      setCustomImage(imageUrl);
+      setCustomIcon('None'); // Tắt icon mặc định nếu khách dùng ảnh của họ
+    }
+  };
+
+  // Cập nhật hàm gửi Zalo
+  const handleSendToZalo = () => {
+    if (!customerPhone) {
+      alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
+      return;
+    }
+
+    const imageNote = customImage 
+      ? "\n- [LƯU Ý]: Tôi có tải lên 1 ảnh mẫu trên web. Tôi sẽ gửi ảnh đó ngay dưới tin nhắn này!" 
+      : "";
+
+    const message = `Chào xưởng, tôi muốn đặt làm đèn Neon:
+- Nội dung chữ: "${customText}"
+- Hình/Icon: ${customIcon !== 'None' ? customIcon : 'Dùng ảnh tự tải lên'}
+- Font chữ: ${customFont}
+- Màu sắc: ${customColor}
+- SĐT của tôi: ${customerPhone}
+- Ghi chú: ${customNote ? customNote : 'Không có'}${imageNote}`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
+    window.open(zaloLink, '_blank');
+  };
   // State cho tính năng Thiết kế Neon
   const [customText, setCustomText] = useState('Chill');
   const [customColor, setCustomColor] = useState('cyan');
@@ -29,29 +66,7 @@ export default function App() {
   const [customNote, setCustomNote] = useState(''); // Ghi chú thêm
   const [customerPhone, setCustomerPhone] = useState(''); // SĐT của khách
 
-  // Hàm xử lý khi bấm nút "Gửi qua Zalo"
-  const handleSendToZalo = () => {
-    if (!customerPhone) {
-      alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
-      return;
-    }
 
-    // Soạn sẵn nội dung tin nhắn
-    const message = `Chào xưởng, tôi muốn đặt làm đèn Neon:
-- Nội dung chữ: "${customText}"
-- Hình kèm theo: ${customIcon}
-- Font chữ: ${customFont}
-- Màu sắc: ${customColor}
-- SĐT của tôi: ${customerPhone}
-- Ghi chú thêm: ${customNote ? customNote : 'Không có'}`;
-
-    // Mã hóa tin nhắn để truyền qua URL
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Mở Zalo với nội dung điền sẵn (thay HOTLINE bằng số Zalo thực tế)
-    const zaloLink = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
-    window.open(zaloLink, '_blank');
-  };
   
   // Công thức tính giá: Giả sử 120.000đ / 1 ký tự (có thể tùy chỉnh)
   const pricePerChar = 120000;
@@ -154,19 +169,32 @@ export default function App() {
 
         <div className="customizer-container">
           {/* Màn hình hiển thị chữ & Hình */}
+          {/* Màn hình hiển thị chữ & Hình */}
           <div className="preview-board">
             <div className={`neon-preview-wrapper text-${customColor}`}>
-              {/* Hiển thị Icon nếu có chọn */}
-              {customIcon === 'Heart' && <Heart size={64} className="neon-icon" />}
-              {customIcon === 'Star' && <Star size={64} className="neon-icon" />}
-              {customIcon === 'Feather' && <Feather size={64} className="neon-icon" />}
-              {customIcon === 'Zap' && <Zap size={64} className="neon-icon" />}
+              
+              {/* Hiển thị ảnh Upload nếu có */}
+              {customImage ? (
+                <img 
+                  src={customImage} 
+                  alt="Mẫu upload" 
+                  className="uploaded-neon-img" 
+                />
+              ) : (
+                /* Nếu không có ảnh upload thì hiển thị Icon mặc định */
+                <>
+                  {customIcon === 'Heart' && <Heart size={64} className="neon-icon" />}
+                  {customIcon === 'Star' && <Star size={64} className="neon-icon" />}
+                  {customIcon === 'Feather' && <Feather size={64} className="neon-icon" />}
+                  {customIcon === 'Zap' && <Zap size={64} className="neon-icon" />}
+                </>
+              )}
               
               <div 
                 className="neon-preview-text"
                 style={{ fontFamily: `"${customFont}", cursive` }}
               >
-                {customText || 'Nhập chữ...'}
+                {customText}
               </div>
             </div>
           </div>
@@ -185,13 +213,22 @@ export default function App() {
             </div>
 
             <div className="control-group">
-              <label>2. Hình biểu tượng đi kèm:</label>
+              <label>2. Hình biểu tượng hoặc Ảnh của bạn:</label>
               <div className="icon-picker">
-                <button className={`icon-btn ${customIcon === 'None' ? 'active' : ''}`} onClick={() => setCustomIcon('None')}>Không có</button>
-                <button className={`icon-btn ${customIcon === 'Heart' ? 'active' : ''}`} onClick={() => setCustomIcon('Heart')}><Heart size={20}/> Trái tim</button>
-                <button className={`icon-btn ${customIcon === 'Star' ? 'active' : ''}`} onClick={() => setCustomIcon('Star')}><Star size={20}/> Ngôi sao</button>
-                <button className={`icon-btn ${customIcon === 'Feather' ? 'active' : ''}`} onClick={() => setCustomIcon('Feather')}><Feather size={20}/> Cánh</button>
-                <button className={`icon-btn ${customIcon === 'Zap' ? 'active' : ''}`} onClick={() => setCustomIcon('Zap')}><Zap size={20}/> Tia chớp</button>
+                <button className={`icon-btn ${customIcon === 'None' && !customImage ? 'active' : ''}`} onClick={() => {setCustomIcon('None'); setCustomImage(null);}}>Không có</button>
+                <button className={`icon-btn ${customIcon === 'Heart' ? 'active' : ''}`} onClick={() => {setCustomIcon('Heart'); setCustomImage(null);}}><Heart size={20}/></button>
+                <button className={`icon-btn ${customIcon === 'Star' ? 'active' : ''}`} onClick={() => {setCustomIcon('Star'); setCustomImage(null);}}><Star size={20}/></button>
+                
+                {/* Nút Upload File ẩn, dùng nhãn label để kích hoạt */}
+                <label className="icon-btn upload-btn">
+                  <Upload size={20} /> Tải ảnh lên
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleImageUpload} 
+                    style={{ display: 'none' }} 
+                  />
+                </label>
               </div>
             </div>
 

@@ -633,3 +633,22 @@ textarea {
   resize: vertical;
 }
 textarea:focus { outline: none; border-color: var(--neon-cyan); }
+.upload-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px dashed var(--border-color);
+  cursor: pointer;
+}
+.upload-btn:hover {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.1);
+}
+
+.uploaded-neon-img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: contain;
+  /* CSS Filter để biến ảnh thật thành màu đơn sắc phát sáng theo màu chọn */
+  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor);
+  margin-bottom: 10px;
+}
