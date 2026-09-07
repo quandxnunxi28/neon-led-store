@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import { 
   Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
   CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
-  Heart, Star, Feather, Zap, Upload, Power, Newspaper, ArrowLeft, Download, Image as ImageIcon
+  Heart, Star, Feather, Zap, Upload, Power, Newspaper, ArrowLeft, Download, Image as ImageIcon,
+  Menu, X
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import './App.css';
@@ -19,7 +20,7 @@ const blogPosts = Array.from({ length: 10 }, (_, i) => ({
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const previewRef = useRef(null);
   
   // State Thiết kế Neon
@@ -160,7 +161,19 @@ export default function App() {
   ];
 
   return (
-    <div className="app-container">
+    // THÊM BACKGROUND TRỰC TIẾP VÀO ĐÂY ĐỂ TRÁNH TRỐNG TRẢI
+    <div className="app-container" style={{
+      backgroundColor: '#080b13',
+      backgroundImage: `
+        radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.05), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.05), transparent 30%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
+      `,
+      backgroundSize: '100% 100%, 100% 100%, 40px 40px, 40px 40px',
+      backgroundAttachment: 'fixed',
+      minHeight: '100vh'
+    }}>
       {/* --- HEADER CÓ BACKGROUND MỜ --- */}
       <header 
         className="navbar" 
@@ -171,23 +184,29 @@ export default function App() {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="logo" onClick={() => setCurrentPage('home')} style={{cursor: 'pointer'}}>
+        <div className="logo" onClick={() => {setCurrentPage('home'); setIsMobileMenuOpen(false);}} style={{cursor: 'pointer'}}>
           <Flame className="logo-icon" />
           <span>NEON<strong>STUDIO</strong></span>
         </div>
-        <nav className="nav-links">
-          <button className="nav-btn" onClick={() => setCurrentPage('home')}>Trang Chủ</button>
+
+        {/* NÚT BẤM 3 GẠCH CHO ĐIỆN THOẠI */}
+        <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+
+        <nav className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+          <button className="nav-btn" onClick={() => {setCurrentPage('home'); setIsMobileMenuOpen(false);}}>Trang Chủ</button>
           {currentPage === 'home' && (
             <>
-              <a href="#services">Dịch vụ</a>
-              <a href="#showcase">Dự án</a>
-              <a href="#process">Quy trình</a>
+              <a href="#services" onClick={() => setIsMobileMenuOpen(false)}>Dịch vụ</a>
+              <a href="#showcase" onClick={() => setIsMobileMenuOpen(false)}>Dự án</a>
+              <a href="#process" onClick={() => setIsMobileMenuOpen(false)}>Quy trình</a>
             </>
           )}
-          <button className="nav-btn" onClick={() => setCurrentPage('blog')}>
+          <button className="nav-btn" onClick={() => {setCurrentPage('blog'); setIsMobileMenuOpen(false);}}>
             <Newspaper size={18} style={{marginRight: '5px'}}/> Blog & Dự Án
           </button>
-          <a href="#contact" className="contact-btn" onClick={() => setCurrentPage('home')}>Báo giá ngay</a>
+          <a href="#contact" className="contact-btn" onClick={() => {setCurrentPage('home'); setIsMobileMenuOpen(false);}}>Báo giá ngay</a>
         </nav>
       </header>
 

@@ -723,14 +723,66 @@ body {
 .text-green { color: #fff; text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 40px #00ff00; }
 
 /* Responsive */
+/* Nút bấm Mobile (Ẩn trên máy tính) */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Responsive - GIAO DIỆN ĐIỆN THOẠI */
 @media (max-width: 768px) {
   .customizer-container { grid-template-columns: 1fr; }
   .neon-preview-text { font-size: 2.5rem; }
   .hero-title { font-size: 2rem; }
   .form-container { grid-template-columns: 1fr; padding: 25px; }
   .step-arrow { display: none; }
-  .nav-links { display: none; }
-  .navbar { justify-content: center; }
+  .btn-back { position: relative; margin-bottom: 20px; }
+
+  /* Hiển thị nút 3 gạch */
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  /* Căn đều 2 bên (Logo bên trái, Nút 3 gạch bên phải) */
+  .navbar {
+    justify-content: space-between;
+  }
+
+  /* Tạo danh sách Menu đổ xuống */
+  .nav-links {
+    display: none; /* Ẩn mặc định */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(8, 11, 19, 0.95);
+    backdrop-filter: blur(15px);
+    flex-direction: column;
+    padding: 20px;
+    gap: 15px;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* Khi bấm nút sẽ hiện ra */
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Căn giữa chữ trong menu điện thoại */
+  .nav-links a, .nav-links button {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    font-size: 1.1rem;
+  }
+  
+  .contact-btn {
+    margin-top: 10px;
+  }
 }
 /* Màu nền cho các nút chọn màu */
 .bg-pink { background-color: #ff007f !important; box-shadow: 0 0 10px rgba(255, 0, 127, 0.5); }
