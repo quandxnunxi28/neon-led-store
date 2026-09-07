@@ -20,6 +20,23 @@
 
 body {
   background-color: var(--bg-dark);
+  
+  /* --- HIỆU ỨNG NỀN XỊN XÒ --- */
+  background-image:
+    /* Vệt sáng hồng mờ góc trên trái */
+    radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.07), transparent 30%),
+    /* Vệt sáng xanh mờ góc dưới phải */
+    radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.07), transparent 30%),
+    /* Kẻ sọc ngang mờ */
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    /* Kẻ sọc dọc mờ */
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    
+  /* Kích thước của lưới là 40x40 pixel */
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  /* Giữ nền cố định khi cuộn chuột */
+  background-attachment: fixed;
+
   color: var(--text-main);
   line-height: 1.6;
   overflow-x: hidden;
@@ -842,4 +859,111 @@ h1, h2, h3, h4, h5, h6, .section-title {
 
 @media (max-width: 768px) {
   .btn-back { position: relative; margin-bottom: 20px; }
+}
+/* =========================================
+   HIỆU ỨNG ÁNH SÁNG & TƯỜNG (ANIMATIONS)
+   ========================================= */
+.tool-btn-upload {
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+}
+.tool-btn-upload:hover { background: #334155; }
+.tool-btn-upload.active { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); border-color: var(--neon-cyan); }
+
+/* Hiệu ứng Nhịp thở (Breathing) */
+.anim-breathing { animation: breathe 3s infinite alternate ease-in-out; }
+@keyframes breathe {
+  0% { opacity: 0.7; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Hiệu ứng Nhấp nháy (Flicker) */
+.anim-flicker { animation: flicker 3s infinite; }
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.3; }
+}
+
+/* Hiệu ứng Đa sắc (RGB Chasing) */
+.anim-rgb .neon-preview-text, .anim-rgb .neon-icon {
+  animation: rgb-chasing 4s linear infinite !important;
+}
+@keyframes rgb-chasing {
+  0% { color: #fff; filter: drop-shadow(0 0 15px #ff007f); text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f; }
+  33% { color: #fff; filter: drop-shadow(0 0 15px #00f0ff); text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff; }
+  66% { color: #fff; filter: drop-shadow(0 0 15px #ffea00); text-shadow: 0 0 10px #ffea00, 0 0 20px #ffea00, 0 0 40px #ffea00; }
+  100% { color: #fff; filter: drop-shadow(0 0 15px #ff007f); text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f; }
+}
+
+/* =========================================
+   NÚT ZALO/ĐIỆN THOẠI TRÔI NỔI (FAB)
+   ========================================= */
+.fab-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 999;
+}
+.fab-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: 0.3s;
+  animation: pulse-fab 2s infinite;
+}
+.fab-zalo { background: #0068ff; }
+.fab-phone { background: #10b981; animation-delay: 1s; }
+.fab-btn:hover { transform: scale(1.1); color: white; }
+
+@keyframes pulse-fab {
+  0% { box-shadow: 0 0 0 0 rgba(0, 104, 255, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(0, 104, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 104, 255, 0); }
+}
+
+/* =========================================
+   PHÂN TRANG BLOG (PAGINATION)
+   ========================================= */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 50px;
+  padding-bottom: 20px;
+}
+.page-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.page-btn.active {
+  background: var(--neon-cyan);
+  color: #000;
+  border-color: var(--neon-cyan);
+  font-weight: bold;
+}
+.page-btn:hover:not(.active) {
+  border-color: var(--neon-cyan);
 }

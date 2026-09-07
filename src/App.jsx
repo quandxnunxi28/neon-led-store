@@ -1,80 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
   CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
-  Heart, Star, Feather, Zap, Upload, Power, Newspaper, ArrowLeft
+  Heart, Star, Feather, Zap, Upload, Power, Newspaper, ArrowLeft, Download, Image as ImageIcon
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
 import './App.css';
 
-// --- KHO DỮ LIỆU BLOG TĨNH ---
-const blogPosts = [
-  {
-    id: 1,
-    title: "5 Ý Tưởng Trang Trí Phòng Ngủ Bằng Đèn Neon Cực Chill",
-    date: "05/09/2026",
-    image: "/blog/anh1.jpg", 
-    excerpt: "Khám phá cách biến không gian phòng ngủ của bạn thành một góc nghệ thuật rực rỡ với đèn Neon uốn dẻo...",
-    content: "Đèn neon không chỉ dùng cho quán cafe. Ngày nay, việc đặt một câu quote ý nghĩa hoặc hình ảnh ngộ nghĩnh trên đầu giường đang là xu hướng..."
-  },
-  {
-    id: 2,
-    title: "Tại Sao Nên Chọn Hộp Đèn Mica Thay Vì Biển Bạt Truyền Thống?",
-    date: "02/09/2026",
-    image: "/blog/anh2.jpg",
-    excerpt: "Phân tích ưu nhược điểm của hộp đèn Mica hút nổi và độ bền vượt trội khi sử dụng ngoài trời so với biển bạt Hiflex.",
-    content: "Biển bạt sau 1 năm thường bị phai màu và rách do gió bão. Hộp đèn mica kết hợp LED hắt sáng bên trong giúp thương hiệu của bạn nổi bật 24/7..."
-  }
-];
+// --- KHO DỮ LIỆU BLOG TĨNH (Tạo 10 bài để test phân trang) ---
+const blogPosts = Array.from({ length: 10 }, (_, i) => ({
+  id: i + 1,
+  title: `Bài viết số ${i + 1}: Ý Tưởng Trang Trí Đèn Neon Cực Chill`,
+  date: `0${(i % 9) + 1}/09/2026`,
+  image: `/blog/anh${(i % 2) + 1}.jpg`, 
+  excerpt: "Khám phá cách biến không gian phòng ngủ của bạn thành một góc nghệ thuật rực rỡ với đèn Neon uốn dẻo...",
+  content: "Đèn neon không chỉ dùng cho quán cafe. Ngày nay, việc đặt một câu quote ý nghĩa hoặc hình ảnh ngộ nghĩnh trên đầu giường đang là xu hướng..."
+}));
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   
-  // State cho tính năng Thiết kế Neon
+  const previewRef = useRef(null);
+  
+  // State Thiết kế Neon
   const [customText, setCustomText] = useState('Chill');
   const [customColor, setCustomColor] = useState('cyan');
   const [customFont, setCustomFont] = useState('Dancing Script');
   const [customIcon, setCustomIcon] = useState('Feather');
   const [customImage, setCustomImage] = useState(null);
   
+  // State nâng cao (Tường, Hiệu ứng)
   const [isLightOn, setIsLightOn] = useState(true); 
   const [bgType, setBgType] = useState('brick'); 
+  const [customBg, setCustomBg] = useState(null); 
   const [backing, setBacking] = useState('none'); 
   const [layout, setLayout] = useState('top'); 
+  const [animation, setAnimation] = useState('steady'); 
 
   const [customNote, setCustomNote] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
 
-  // CẬP NHẬT: Thêm trường 'type' vào Form liên hệ
   const [formData, setFormData] = useState({ 
     name: '', 
     phone: '', 
-    type: 'Làm theo yêu cầu tự điền', // Mặc định
+    type: 'Làm theo yêu cầu tự điền',
     request: '' 
   });
+
+  // PHÂN TRANG BLOG (Tối đa 8 bài 1 trang)
+  const [currentBlogPage, setCurrentBlogPage] = useState(1);
+  const POSTS_PER_PAGE = 8; 
+  const indexOfLastPost = currentBlogPage * POSTS_PER_PAGE;
+  const indexOfFirstPost = indexOfLastPost - POSTS_PER_PAGE;
+  const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(blogPosts.length / POSTS_PER_PAGE);
 
   const HOTLINE = "0984115697";
   const ZALO_URL = `https://zalo.me/${HOTLINE}`;
 
+  // Upload Hình Icon
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setCustomImage(imageUrl);
+      setCustomImage(URL.createObjectURL(file));
       setCustomIcon('None'); 
     }
   };
 
-  // Hàm gửi Zalo cho khu vực "Phòng Thử Neon"
+  // Upload Ảnh Tường Nhà
+  const handleBgUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCustomBg(URL.createObjectURL(file));
+      setBgType('custom');
+    }
+  };
+
+  // Hàm tải ảnh màn hình
+  const handleDownloadDesign = async () => {
+    if (!previewRef.current) return;
+    try {
+      const powerBtn = previewRef.current.querySelector('.power-btn');
+      if (powerBtn) powerBtn.style.display = 'none';
+
+      const canvas = await html2canvas(previewRef.current, {
+        useCORS: true,
+        backgroundColor: '#000',
+        scale: 2 
+      });
+
+      if (powerBtn) powerBtn.style.display = 'flex';
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL("image/png");
+      link.download = `Thiet-Ke-Neon-${new Date().getTime()}.png`;
+      link.click();
+    } catch (error) {
+      alert("Có lỗi xảy ra khi tải ảnh, vui lòng thử lại!");
+    }
+  };
+
   const handleSendToZalo = async () => {
     if (!customerPhone) {
       alert("Vui lòng nhập số điện thoại để xưởng tiện liên hệ lại nhé!");
       return;
     }
 
-    const imageNote = customImage ? "\n- [LƯU Ý]: Có tải ảnh mẫu trên web, sẽ gửi ngay bên dưới!" : "";
+    const imageNote = customImage ? "\n- [LƯU Ý]: Tôi có gửi kèm ảnh bản thiết kế trên web ở ngay phía dưới nhé!" : "";
 
     const message = `Chào xưởng, tôi đặt đèn Neon (Tự thiết kế web):
 - Chữ: "${customText}" (Font: ${customFont}, Màu: ${customColor})
+- Hiệu ứng: ${animation}
 - Hình: ${customIcon !== 'None' ? customIcon : 'Dùng ảnh tải lên'}
 - Vị trí hình: ${layout}
 - Khung Mica: ${backing === 'none' ? 'Không viền' : backing === 'cut' ? 'Cắt theo viền' : 'Nguyên tấm vuông'}
@@ -83,14 +119,12 @@ export default function App() {
 
     try {
       await navigator.clipboard.writeText(message);
-      alert("✅ Đã copy thông tin đơn hàng!\n\nKhi Zalo mở lên, bạn chỉ cần nhấn giữ ô chat và chọn 'Dán' (Paste) để gửi cho xưởng nhé.");
+      alert("✅ Đã copy thông tin đơn hàng!\n\nNếu bạn đã BẤM TẢI ẢNH THIẾT KẾ, vui lòng gửi kèm bức ảnh đó cùng với đoạn tin nhắn này trong Zalo nhé!");
     } catch (err) {}
 
-    const encodedMessage = encodeURIComponent(message);
-    window.location.href = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
+    window.location.href = `https://zalo.me/${HOTLINE}?text=${encodeURIComponent(message)}`;
   };
 
-  // CẬP NHẬT: Hàm xử lý Form liên hệ (Áp dụng copy & Zalo tương tự)
   const handleSubmitContactForm = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
@@ -98,7 +132,6 @@ export default function App() {
       return;
     }
 
-    // Soạn tin nhắn chuẩn bị gửi Zalo
     const message = `Chào xưởng, tôi cần tư vấn làm biển đèn:
 - Họ và tên: ${formData.name}
 - SĐT liên hệ: ${formData.phone}
@@ -110,32 +143,13 @@ export default function App() {
       alert("✅ Đã copy thông tin liên hệ!\n\nKhi Zalo mở lên, bạn chỉ cần nhấn giữ ô chat và chọn 'Dán' (Paste) để gửi cho xưởng nhé.");
     } catch (err) {}
 
-    const encodedMessage = encodeURIComponent(message);
-    window.location.href = `https://zalo.me/${HOTLINE}?text=${encodedMessage}`;
+    window.location.href = `https://zalo.me/${HOTLINE}?text=${encodeURIComponent(message)}`;
   };
 
   const services = [
-    {
-      id: 1,
-      title: "Đèn LED Neon Sign Uốn Mica",
-      icon: <Sparkles className="service-icon pink" />,
-      desc: "Chất liệu mica dẫn sáng cao cấp, LED silicon dẻo siêu bền, chống vỡ, tiết kiệm điện 80%. Tùy biến chữ nghệ thuật, logo quán cafe, trà chanh, phòng ngủ.",
-      highlight: "Tạo hình mọi kích thước & font chữ"
-    },
-    {
-      id: 2,
-      title: "Hộp Đèn Quảng Cáo & Music Box",
-      icon: <Box className="service-icon cyan" />,
-      desc: "Hộp đèn mica hút nổi, hộp đèn siêu mỏng mặt mica hắt sáng viền. Đặc biệt nhận làm Music Box phát sáng theo nhạc và đèn để bàn làm việc.",
-      highlight: "Ánh sáng đồng đều, góc cạnh sắc sảo"
-    },
-    {
-      id: 3,
-      title: "Photobooth & Góc Check-in Sự Kiện",
-      icon: <Camera className="service-icon yellow" />,
-      desc: "Setup trọn gói background, hộp đèn neon chụp hình photobooth cho tiệc cưới, sinh nhật, khai trương, studio và hội nghị thương hiệu.",
-      highlight: "Nổi bật trên từng khung hình"
-    }
+    { id: 1, title: "Đèn LED Neon Sign Uốn Mica", icon: <Sparkles className="service-icon pink" />, desc: "Chất liệu mica dẫn sáng cao cấp, LED silicon dẻo siêu bền, chống vỡ, tiết kiệm điện 80%.", highlight: "Tạo hình mọi kích thước & font chữ" },
+    { id: 2, title: "Hộp Đèn Quảng Cáo & Music Box", icon: <Box className="service-icon cyan" />, desc: "Hộp đèn mica hút nổi, hộp đèn siêu mỏng mặt mica hắt sáng viền. Đặc biệt nhận làm Music Box.", highlight: "Ánh sáng đồng đều, góc cạnh sắc sảo" },
+    { id: 3, title: "Photobooth & Góc Check-in Sự Kiện", icon: <Camera className="service-icon yellow" />, desc: "Setup trọn gói background, hộp đèn neon chụp hình photobooth cho tiệc cưới, sinh nhật, khai trương.", highlight: "Nổi bật trên từng khung hình" }
   ];
 
   const showcaseItems = [
@@ -147,8 +161,16 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Thanh điều hướng Header */}
-      <header className="navbar">
+      {/* --- HEADER CÓ BACKGROUND MỜ --- */}
+      <header 
+        className="navbar" 
+        style={{ 
+          backgroundImage: "linear-gradient(rgba(8, 11, 19, 0.85), rgba(8, 11, 19, 0.85)), url('/header/anhheader.png')", 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         <div className="logo" onClick={() => setCurrentPage('home')} style={{cursor: 'pointer'}}>
           <Flame className="logo-icon" />
           <span>NEON<strong>STUDIO</strong></span>
@@ -162,7 +184,6 @@ export default function App() {
               <a href="#process">Quy trình</a>
             </>
           )}
-          
           <button className="nav-btn" onClick={() => setCurrentPage('blog')}>
             <Newspaper size={18} style={{marginRight: '5px'}}/> Blog & Dự Án
           </button>
@@ -170,10 +191,18 @@ export default function App() {
         </nav>
       </header>
 
-      {/* --- PHÂN NHÁNH TRANG CHỦ HOẶC TRANG BLOG --- */}
+      {/* --- NÚT GỌI/ZALO TRÔI NỔI --- */}
+      <div className="fab-container">
+        <a href={ZALO_URL} target="_blank" rel="noreferrer" className="fab-btn fab-zalo" title="Chat Zalo">
+          <MessageCircle size={28} />
+        </a>
+        <a href={`tel:${HOTLINE}`} className="fab-btn fab-phone" title="Gọi Hotline">
+          <Phone size={24} />
+        </a>
+      </div>
+
       {currentPage === 'home' ? (
         <>
-          {/* Hero Section */}
           <section className="hero">
             <div className="hero-content">
               <div className="badge">
@@ -199,7 +228,7 @@ export default function App() {
             </div>
           </section>
 
-          {/* Phòng thử Neon */}
+          {/* --- PHÒNG THỬ NEON CHUYÊN NGHIỆP --- */}
           <section id="custom-neon" className="section dark-bg">
             <div className="section-header">
               <h2 className="section-title">TỰ THIẾT KẾ NEON THEO Ý BẠN</h2>
@@ -208,12 +237,17 @@ export default function App() {
 
             <div className="customizer-container">
               <div className="preview-section">
-                <div className={`preview-board bg-${bgType}`}>
+                
+                <div 
+                  ref={previewRef} 
+                  className={`preview-board bg-${bgType}`}
+                  style={bgType === 'custom' && customBg ? { backgroundImage: `url(${customBg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                >
                   <button className={`power-btn ${isLightOn ? 'on' : 'off'}`} onClick={() => setIsLightOn(!isLightOn)} title="Bật/Tắt điện">
                     <Power size={24} />
                   </button>
 
-                  <div className={`neon-preview-wrapper layout-${layout} backing-${backing} ${!isLightOn ? 'is-off' : ''} text-${customColor}`}>
+                  <div className={`neon-preview-wrapper layout-${layout} backing-${backing} ${!isLightOn ? 'is-off' : ''} anim-${isLightOn ? animation : 'none'} text-${customColor}`}>
                     <div className="preview-image-part">
                       {customImage ? (
                         <img src={customImage} alt="Mẫu upload" className="uploaded-neon-img" />
@@ -240,6 +274,18 @@ export default function App() {
                     <button className={bgType === 'greenery' ? 'active' : ''} onClick={() => setBgType('greenery')}>Tường cỏ</button>
                     <button className={bgType === 'concrete' ? 'active' : ''} onClick={() => setBgType('concrete')}>Bê tông</button>
                     <button className={bgType === 'dark' ? 'active' : ''} onClick={() => setBgType('dark')}>Tối giản</button>
+                    {/* NÚT ƯỚM TƯỜNG NHÀ */}
+                    <label className={`tool-btn-upload ${bgType === 'custom' ? 'active' : ''}`}>
+                      <ImageIcon size={14} style={{marginRight: 4}}/> Ướm tường nhà
+                      <input type="file" accept="image/*" onChange={handleBgUpload} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                  <div className="tool-group">
+                    <span className="tool-label">Hiệu ứng:</span>
+                    <button className={animation === 'steady' ? 'active' : ''} onClick={() => setAnimation('steady')}>Sáng tĩnh</button>
+                    <button className={animation === 'breathing' ? 'active' : ''} onClick={() => setAnimation('breathing')}>Nhịp thở</button>
+                    <button className={animation === 'flicker' ? 'active' : ''} onClick={() => setAnimation('flicker')}>Nhấp nháy</button>
+                    <button className={animation === 'rgb' ? 'active' : ''} onClick={() => setAnimation('rgb')}>Đa sắc (RGB)</button>
                   </div>
                   <div className="tool-group">
                     <span className="tool-label">Khung Mica:</span>
@@ -302,14 +348,32 @@ export default function App() {
                   <textarea rows="2" value={customNote} onChange={(e) => setCustomNote(e.target.value)} placeholder="VD: Mình muốn làm ngang 1 mét..." style={{ marginBottom: '10px' }}></textarea>
                   <input type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Nhập SĐT / Zalo của bạn..." style={{ borderColor: !customerPhone ? 'var(--neon-pink)' : 'var(--border-color)' }} />
                 </div>
-                <button className="btn btn-submit" onClick={handleSendToZalo}>
-                  Lưu Thiết Kế & Chốt Qua Zalo
-                </button>
+                
+                {/* LỜI NHẮC TRANG TRỌNG */}
+                <div style={{ backgroundColor: 'rgba(255, 234, 0, 0.08)', borderLeft: '4px solid var(--neon-yellow)', padding: '12px', fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '15px', borderRadius: '4px', lineHeight: '1.5' }}>
+                  <strong style={{color: 'var(--neon-yellow)'}}>💡 LƯU Ý QUAN TRỌNG:</strong> Quý khách vui lòng bấm <b>"Tải Ảnh Thiết Kế"</b> về máy trước, sau đó đính kèm bức ảnh vừa tải vào tin nhắn Zalo để xưởng tư vấn và báo giá chuẩn xác nhất nhé!
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button 
+                    className="btn" 
+                    onClick={handleDownloadDesign}
+                    style={{ flex: 1, backgroundColor: '#1e293b', border: '1px solid var(--border-color)', color: '#fff', fontSize: '0.9rem', justifyContent: 'center' }}
+                  >
+                    <Download size={18}/> Tải Ảnh Thiết Kế
+                  </button>
+                  <button 
+                    className="btn btn-submit" 
+                    onClick={handleSendToZalo}
+                    style={{ flex: 1, marginTop: '0', fontSize: '0.9rem', justifyContent: 'center' }}
+                  >
+                    Gửi & Chốt Qua Zalo
+                  </button>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Cam kết / Ưu điểm */}
           <section className="features">
             <div className="feature-item"><ShieldCheck size={28} className="feat-icon" /><div><h4>Bảo hành nguồn & LED</h4><p>Bảo hành 12 tháng lỗi 1 đổi 1</p></div></div>
             <div className="feature-item"><Lightbulb size={28} className="feat-icon" /><div><h4>Lên demo 3D trước</h4><p>Khách duyệt mẫu vẽ mới tiến hành cắt mica</p></div></div>
@@ -343,14 +407,14 @@ export default function App() {
           <section id="process" className="section">
             <div className="section-header"><h2 className="section-title">QUY TRÌNH ĐẶT HÀNG NHANH GỌN</h2></div>
             <div className="process-steps">
-              <div className="step-card"><span className="step-num">01</span><h4>Gửi Ý Tưởng</h4><p>Gửi ảnh mẫu, câu chữ qua Zalo.</p></div><ChevronRight className="step-arrow" />
-              <div className="step-card"><span className="step-num">02</span><h4>Lên Demo & Báo Giá</h4><p>Thiết kế phác thảo kích thước mica và báo giá.</p></div><ChevronRight className="step-arrow" />
-              <div className="step-card"><span className="step-num">03</span><h4>Gia Công Tỉ Mỉ</h4><p>Cắt laser, đi dây LED, test sáng 24h.</p></div><ChevronRight className="step-arrow" />
-              <div className="step-card"><span className="step-num">04</span><h4>Giao Hàng</h4><p>Kèm nguồn 12V, ốc bắt tường.</p></div>
+              <div className="step-card"><span className="step-num">01</span><h4>Gửi Ý Tưởng</h4><p>Gửi ảnh mẫu qua Zalo.</p></div><ChevronRight className="step-arrow" />
+              <div className="step-card"><span className="step-num">02</span><h4>Lên Demo & Báo Giá</h4><p>Thiết kế phác thảo kích thước.</p></div><ChevronRight className="step-arrow" />
+              <div className="step-card"><span className="step-num">03</span><h4>Gia Công Tỉ Mỉ</h4><p>Cắt laser, đi dây LED.</p></div><ChevronRight className="step-arrow" />
+              <div className="step-card"><span className="step-num">04</span><h4>Giao Hàng</h4><p>Đóng gói cẩn thận 100%.</p></div>
             </div>
           </section>
 
-          {/* --- CẬP NHẬT GIAO DIỆN FORM LIÊN HỆ DƯỚI CÙNG --- */}
+          {/* Form Liên Hệ Dưới Cùng */}
           <section id="contact" className="section form-section">
             <div className="form-container">
               <div className="form-left">
@@ -370,51 +434,28 @@ export default function App() {
               <div className="form-right">
                 <form onSubmit={handleSubmitContactForm} className="contact-form">
                   <label>Họ và tên của bạn</label>
-                  <input 
-                    type="text" 
-                    placeholder="VD: Anh Tuấn"
-                    value={formData.name} 
-                    onChange={(e) => setFormData({...formData, name: e.target.value})} 
-                    required 
-                  />
+                  <input type="text" placeholder="VD: Anh Tuấn" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
 
                   <label>Số điện thoại / Zalo</label>
-                  <input 
-                    type="tel" 
-                    placeholder="VD: 0988xxxxxx"
-                    value={formData.phone} 
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})} 
-                    required 
-                  />
+                  <input type="tel" placeholder="VD: 0988xxxxxx" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} required />
 
-                  {/* THÊM MỚI: Tùy chọn Mẫu có sẵn hoặc Tự điền */}
                   <label>Loại yêu cầu</label>
-                  <select 
-                    value={formData.type} 
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
-                  >
+                  <select value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})}>
                     <option value="Làm theo yêu cầu tự điền">Làm theo yêu cầu tự điền</option>
                     <option value="Tư vấn mẫu có sẵn trên web">Tư vấn mẫu có sẵn trên web</option>
                   </select>
 
-                  <label>Nội dung muốn làm (Mã mẫu hoặc chi tiết yêu cầu...)</label>
-                  <textarea 
-                    rows="3" 
-                    placeholder="VD: Mình cần làm biển chữ 'Coffee Chill' ngang 80cm..."
-                    value={formData.request} 
-                    onChange={(e) => setFormData({...formData, request: e.target.value})}
-                  ></textarea>
+                  <label>Nội dung muốn làm</label>
+                  <textarea rows="3" placeholder="VD: Mình cần làm biển chữ 'Coffee Chill' ngang 80cm..." value={formData.request} onChange={(e) => setFormData({...formData, request: e.target.value})}></textarea>
 
-                  <button type="submit" className="btn btn-submit">
-                    Gửi Yêu Cầu Tư Vấn Qua Zalo
-                  </button>
+                  <button type="submit" className="btn btn-submit">Gửi Yêu Cầu Tư Vấn Qua Zalo</button>
                 </form>
               </div>
             </div>
           </section>
         </>
       ) : (
-        /* --- GIAO DIỆN TRANG BLOG MỚI --- */
+        /* --- GIAO DIỆN TRANG BLOG MỚI CHUẨN CÓ PHÂN TRANG --- */
         <div className="blog-page section">
           <div className="blog-header">
             <button className="btn-back" onClick={() => setCurrentPage('home')}>
@@ -425,7 +466,7 @@ export default function App() {
           </div>
 
           <div className="blog-grid">
-            {blogPosts.map(post => (
+            {currentPosts.map(post => (
               <div key={post.id} className="blog-card">
                 <div className="blog-image-wrapper">
                   <img src={post.image} alt={post.title} className="blog-img" />
@@ -435,7 +476,6 @@ export default function App() {
                   <h3 className="blog-title">{post.title}</h3>
                   <p className="blog-excerpt">{post.excerpt}</p>
                   
-                  {/* CẬP NHẬT: Khi bấm tư vấn, tự động gán Type là "Mẫu có sẵn" */}
                   <button 
                     className="read-more-btn"
                     onClick={() => {
@@ -454,11 +494,37 @@ export default function App() {
               </div>
             ))}
           </div>
+
+          {/* CỤM NÚT PHÂN TRANG */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button 
+                  key={index + 1} 
+                  onClick={() => {
+                    setCurrentBlogPage(index + 1);
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Tự cuộn lên đầu khi sang trang mới
+                  }} 
+                  className={`page-btn ${currentBlogPage === index + 1 ? 'active' : ''}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Footer (Luôn hiện dù ở trang nào) */}
+      {/* --- FOOTER KHÔNG DÙNG ICON ĐỂ TRÁNH LỖI --- */}
       <footer className="footer">
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '15px' }}>
+          <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ color: 'var(--neon-cyan)', transition: '0.3s', fontWeight: 'bold', textDecoration: 'none' }}>
+            FACEBOOK
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ color: 'var(--neon-pink)', transition: '0.3s', fontWeight: 'bold', textDecoration: 'none' }}>
+            INSTAGRAM
+          </a>
+        </div>
         <p>© {new Date().getFullYear()} NEON STUDIO - Chuyên Đèn Neon Sign Mica, Hộp Đèn Quảng Cáo & Photobooth.</p>
         <p className="footer-sub">Thiết kế sáng tạo - Ánh sáng tinh tế - Gia công chuẩn xác</p>
       </footer>
