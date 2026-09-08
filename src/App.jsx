@@ -152,13 +152,33 @@ export default function App() {
   const handlePointerMove = (e) => {
     if (!isDragging || !dragRef.current) return;
     const { id, startX, startY, origX, origY } = dragRef.current;
+    
+    // Tính toán quãng đường rê chuột
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
 
+    // Tọa độ mới mong muốn
+    let newX = origX + dx;
+    let newY = origY + dy;
+
+    // --- BỨC TƯỜNG GIỚI HẠN (BOUNDING BOX) ---
+    if (previewRef.current) {
+      const boardWidth = previewRef.current.clientWidth;
+      const boardHeight = previewRef.current.clientHeight;
+      
+      // Giới hạn dựa trên chiều rộng bảng (để lại 40px lề an toàn)
+      const limitX = (boardWidth / 2) - 40;
+      const limitY = (boardHeight / 2) - 40;
+
+      // Ép tọa độ không bao giờ vượt qua limitX và limitY
+      newX = Math.max(-limitX, Math.min(limitX, newX));
+      newY = Math.max(-limitY, Math.min(limitY, newY));
+    }
+
     if (id === 'text') {
-      setTextTransform(prev => ({ ...prev, x: origX + dx, y: origY + dy }));
+      setTextTransform(prev => ({ ...prev, x: newX, y: newY }));
     } else {
-      setIcons(icons.map(icon => icon.id === id ? { ...icon, x: origX + dx, y: origY + dy } : icon));
+      setIcons(icons.map(icon => icon.id === id ? { ...icon, x: newX, y: newY } : icon));
     }
   };
 
@@ -509,6 +529,7 @@ export default function App() {
             </div>
           </section>
 
+          {/* Các mục khác giữ nguyên độ đẹp */}
           <section className="features">
             <div className="feature-item"><ShieldCheck size={28} className="feat-icon" /><div><h4>Bảo hành nguồn & LED</h4><p>Bảo hành 12 tháng lỗi 1 đổi 1</p></div></div>
             <div className="feature-item"><Lightbulb size={28} className="feat-icon" /><div><h4>Lên demo 3D trước</h4><p>Khách duyệt mẫu vẽ mới tiến hành cắt mica</p></div></div>
