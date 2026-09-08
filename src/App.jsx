@@ -69,7 +69,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const previewRef = useRef(null);
   
-  // --- STATE QUẢN LÝ VẬT THỂ (KÉO THẢ DRAG & DROP NHƯ CANVA) ---
+  // --- STATE QUẢN LÝ VẬT THỂ (KÉO THẢ DRAG & DROP) ---
   const [selectedId, setSelectedId] = useState('text'); 
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef(null);
@@ -290,21 +290,17 @@ export default function App() {
             </div>
 
             <div className="customizer-container">
+              
+              {/* === CỘT TRÁI: KHU VỰC BẢNG ĐEN VÀ THANH TRƯỢT SÁT NHAU === */}
               <div className="preview-section">
                 
-                {/* --- BẢNG ĐEN DRAWING BOARD ĐÃ SỬA LỖI CLICK --- */}
                 <div 
                   ref={previewRef} 
                   className={`preview-board bg-${bgType}`} 
-                  onPointerDown={() => setSelectedId(null)} // CHỈ BỎ CHỌN KHI CHỦ ĐỘNG NHẤN VÀO NỀN TRỐNG
+                  onPointerDown={() => setSelectedId(null)} 
                   style={bgType === 'custom' && customBg ? { backgroundImage: `url(${customBg})`, backgroundSize: 'cover', backgroundPosition: 'center', userSelect: 'none' } : { userSelect: 'none' }}
                 >
-                  <button 
-                    className={`power-btn ${isLightOn ? 'on' : 'off'}`} 
-                    onPointerDown={(e) => e.stopPropagation()} // Đảm bảo bấm nút nguồn không bị ảnh hưởng
-                    onClick={(e) => {e.stopPropagation(); setIsLightOn(!isLightOn);}} 
-                    title="Bật/Tắt điện"
-                  >
+                  <button className={`power-btn ${isLightOn ? 'on' : 'off'}`} onPointerDown={(e) => e.stopPropagation()} onClick={(e) => {e.stopPropagation(); setIsLightOn(!isLightOn);}} title="Bật/Tắt điện">
                     <Power size={24} />
                   </button>
 
@@ -364,6 +360,36 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* KHỐI ĐIỀU CHỈNH GẮN CHẶT DƯỚI BẢNG ĐEN (TỐI ƯU CHO ĐIỆN THOẠI) */}
+                <div className="control-group" style={{ background: 'rgba(0,240,255,0.05)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(0,240,255,0.2)', marginTop: '5px', marginBottom: '15px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                    <label style={{ color: '#fff', margin: 0, fontWeight: 'bold' }}>
+                      <span style={{color: 'var(--neon-cyan)'}}>ĐANG CHỈNH SỬA:</span> <span style={{ color: 'var(--neon-pink)', textTransform: 'uppercase'}}>{selectedId === 'text' ? 'Dòng chữ' : (selectedId ? 'Hình ảnh' : 'Chưa chọn vật thể')}</span>
+                    </label>
+                    {selectedId && selectedId !== 'text' && (
+                      <button onClick={deleteSelected} style={{ background: 'rgba(255,0,0,0.2)', border: '1px solid rgba(255,0,0,0.4)', color: '#ff4d4d', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
+                        <Trash2 size={16}/> Xóa
+                      </button>
+                    )}
+                  </div>
+
+                  {selectedId ? (
+                    <div style={{ display: 'flex', gap: '20px' }}>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '8px', display: 'block' }}>Kích thước: {currentScale}x</label>
+                        <input type="range" min="0.5" max="4" step="0.1" value={currentScale} onChange={(e) => updateSelectedTransform('scale', e.target.value)} style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--neon-cyan)' }} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '8px', display: 'block' }}>Góc xoay: {currentRotate}°</label>
+                        <input type="range" min="-180" max="180" step="1" value={currentRotate} onChange={(e) => updateSelectedTransform('rotate', e.target.value)} style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--neon-cyan)' }} />
+                      </div>
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: 0 }}>👆 Hãy bấm vào dòng chữ hoặc hình trên bảng đen để xoay lật!</p>
+                  )}
+                </div>
+
+                {/* Các công cụ Nền & Khung */}
                 <div className="quick-tools">
                   <div className="tool-group">
                     <span className="tool-label">Phông nền:</span>
@@ -395,10 +421,16 @@ export default function App() {
                 </div>
               </div>
 
+              {/* === CỘT PHẢI: CHỈ CÒN NHẬP DỮ LIỆU === */}
               <div className="controls-board">
                 
+                <div className="control-group">
+                  <label>1. Sửa nội dung chữ Neon:</label>
+                  <input type="text" maxLength="25" value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder="VD: Quán Của Tuấn" onClick={() => setSelectedId('text')} />
+                </div>
+
                 <div className="control-group" style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-                  <label style={{ color: 'var(--neon-cyan)', fontWeight: 'bold' }}>1. THÊM HÌNH VÀO BẢNG:</label>
+                  <label style={{ color: 'var(--neon-yellow)', fontWeight: 'bold' }}>2. THÊM HÌNH VÀO BẢNG:</label>
                   <div className="icon-picker">
                     <button 
                       type="button"
@@ -431,38 +463,6 @@ export default function App() {
                         </button>
                       ))}
                     </div>
-                  )}
-                </div>
-
-                <div className="control-group" style={{ background: 'rgba(0,240,255,0.05)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(0,240,255,0.2)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                    <label style={{ color: '#fff', margin: 0, fontWeight: 'bold' }}>
-                      2. ĐANG CHỈNH SỬA: <span style={{ color: 'var(--neon-pink)'}}>{selectedId === 'text' ? 'DÒNG CHỮ' : (selectedId ? 'HÌNH ẢNH' : 'Chưa chọn')}</span>
-                    </label>
-                    {selectedId && selectedId !== 'text' && (
-                      <button onClick={deleteSelected} style={{ background: 'rgba(255,0,0,0.2)', border: 'none', color: '#ff4d4d', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Trash2 size={16}/> Xóa hình
-                      </button>
-                    )}
-                  </div>
-
-                  {selectedId === 'text' && (
-                    <input type="text" maxLength="25" value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder="Nhập dòng chữ của bạn..." style={{ marginBottom: '15px' }}/>
-                  )}
-
-                  {selectedId ? (
-                    <div style={{ display: 'flex', gap: '15px' }}>
-                      <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px', display: 'block' }}>Kích thước: {currentScale}x</label>
-                        <input type="range" min="0.5" max="4" step="0.1" value={currentScale} onChange={(e) => updateSelectedTransform('scale', e.target.value)} style={{ width: '100%', cursor: 'pointer' }} />
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px', display: 'block' }}>Góc xoay: {currentRotate}°</label>
-                        <input type="range" min="-180" max="180" step="1" value={currentRotate} onChange={(e) => updateSelectedTransform('rotate', e.target.value)} style={{ width: '100%', cursor: 'pointer' }} />
-                      </div>
-                    </div>
-                  ) : (
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>Hãy bấm vào dòng chữ hoặc hình trên bảng đen để kéo thả và xoay lật!</p>
                   )}
                 </div>
 
