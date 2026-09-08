@@ -153,24 +153,19 @@ export default function App() {
     if (!isDragging || !dragRef.current) return;
     const { id, startX, startY, origX, origY } = dragRef.current;
     
-    // Tính toán quãng đường rê chuột
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
 
-    // Tọa độ mới mong muốn
     let newX = origX + dx;
     let newY = origY + dy;
 
-    // --- BỨC TƯỜNG GIỚI HẠN (BOUNDING BOX) ---
     if (previewRef.current) {
       const boardWidth = previewRef.current.clientWidth;
       const boardHeight = previewRef.current.clientHeight;
       
-      // Giới hạn dựa trên chiều rộng bảng (để lại 40px lề an toàn)
       const limitX = (boardWidth / 2) - 40;
       const limitY = (boardHeight / 2) - 40;
 
-      // Ép tọa độ không bao giờ vượt qua limitX và limitY
       newX = Math.max(-limitX, Math.min(limitX, newX));
       newY = Math.max(-limitY, Math.min(limitY, newY));
     }
@@ -227,7 +222,8 @@ export default function App() {
 
     try {
       await navigator.clipboard.writeText(message);
-      alert("✅ Đã copy thông tin đơn hàng!\n\nNếu bạn đã BẤM TẢI ẢNH THIẾT KẾ, vui lòng gửi kèm bức ảnh đó cùng với đoạn tin nhắn này trong Zalo nhé!");
+      // ĐÃ SỬA LẠI CÂU THÔNG BÁO TẠI ĐÂY THEO ĐÚNG YÊU CẦU CỦA BẠN
+      alert("✅ Đã copy nội dung!\n\nBạn chỉ cần dán vào Zalo cho nhà sản xuất thôi và nhớ phải tải cả ảnh nhé!");
     } catch (err) {}
     window.location.href = `https://zalo.me/${HOTLINE}?text=${encodeURIComponent(message)}`;
   };
@@ -311,9 +307,7 @@ export default function App() {
 
             <div className="customizer-container">
               
-              {/* === CỘT TRÁI: KHU VỰC BẢNG ĐEN VÀ THANH TRƯỢT SÁT NHAU === */}
               <div className="preview-section">
-                
                 <div 
                   ref={previewRef} 
                   className={`preview-board bg-${bgType}`} 
@@ -380,7 +374,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* KHỐI ĐIỀU CHỈNH GẮN CHẶT DƯỚI BẢNG ĐEN (TỐI ƯU CHO ĐIỆN THOẠI) */}
                 <div className="control-group" style={{ background: 'rgba(0,240,255,0.05)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(0,240,255,0.2)', marginTop: '5px', marginBottom: '15px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                     <label style={{ color: '#fff', margin: 0, fontWeight: 'bold' }}>
@@ -409,7 +402,6 @@ export default function App() {
                   )}
                 </div>
 
-                {/* Các công cụ Nền & Khung */}
                 <div className="quick-tools">
                   <div className="tool-group">
                     <span className="tool-label">Phông nền:</span>
@@ -441,7 +433,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* === CỘT PHẢI: CHỈ CÒN NHẬP DỮ LIỆU === */}
               <div className="controls-board">
                 
                 <div className="control-group">
@@ -529,7 +520,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* Các mục khác giữ nguyên độ đẹp */}
           <section className="features">
             <div className="feature-item"><ShieldCheck size={28} className="feat-icon" /><div><h4>Bảo hành nguồn & LED</h4><p>Bảo hành 12 tháng lỗi 1 đổi 1</p></div></div>
             <div className="feature-item"><Lightbulb size={28} className="feat-icon" /><div><h4>Lên demo 3D trước</h4><p>Khách duyệt mẫu vẽ mới tiến hành cắt mica</p></div></div>
