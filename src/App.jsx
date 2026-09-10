@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle, 
+import {
+  Sparkles, Lightbulb, Box, Camera, Phone, MessageCircle,
   CheckCircle2, ChevronRight, Flame, ShieldCheck, Truck,
   Heart, Star, Feather, Zap, Upload, Power, Newspaper, ArrowLeft, Download, Image as ImageIcon,
   Menu, X, Coffee, Music, Headphones, Smile, Sun, Moon, Cloud, Anchor, Key, Scissors, ShoppingBag, Bell,
-  Award, Battery, Bluetooth, Book, Briefcase, Clock, Compass, Cpu, Eye, Film, Flag, Gift, 
+  Award, Battery, Bluetooth, Book, Briefcase, Clock, Compass, Cpu, Eye, Film, Flag, Gift,
   Globe, Home, Mic, Monitor, Radio, Shield, Target, Tv, Umbrella, Watch, Wifi, Trash2
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -15,7 +15,7 @@ const blogPosts = Array.from({ length: 10 }, (_, i) => ({
   id: i + 1,
   title: `Bài viết số ${i + 1}: Ý Tưởng Trang Trí Đèn Neon Cực Chill`,
   date: `0${(i % 9) + 1}/09/2026`,
-  image: `/blog/anh${(i % 2) + 1}.jpg`, 
+  image: `/blog/anh${(i % 2) + 1}.jpg`,
   excerpt: "Khám phá cách biến không gian phòng ngủ của bạn thành một góc nghệ thuật rực rỡ với đèn Neon uốn dẻo...",
   content: "Đèn neon không chỉ dùng cho quán cafe. Ngày nay, việc đặt một câu quote ý nghĩa hoặc hình ảnh ngộ nghĩnh trên đầu giường đang là xu hướng..."
 }));
@@ -68,9 +68,9 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const previewRef = useRef(null);
-  
+
   // --- STATE QUẢN LÝ VẬT THỂ ---
-  const [selectedId, setSelectedId] = useState('text'); 
+  const [selectedId, setSelectedId] = useState('text');
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef(null);
 
@@ -83,15 +83,15 @@ export default function App() {
   // 2. Quản lý Hình Ảnh
   const [icons, setIcons] = useState([
     { id: 'icon_init', type: 'lucide', name: 'Feather', x: 0, y: -50, scale: 1, rotate: 0 }
-  ]); 
+  ]);
   const [showIconLibrary, setShowIconLibrary] = useState(false);
-  
+
   // State nền tường & hiệu ứng
-  const [isLightOn, setIsLightOn] = useState(true); 
-  const [bgType, setBgType] = useState('brick'); 
-  const [customBg, setCustomBg] = useState(null); 
-  const [backing, setBacking] = useState('none'); 
-  const [animation, setAnimation] = useState('steady'); 
+  const [isLightOn, setIsLightOn] = useState(true);
+  const [bgType, setBgType] = useState('brick');
+  const [customBg, setCustomBg] = useState(null);
+  const [backing, setBacking] = useState('none');
+  const [animation, setAnimation] = useState('steady');
 
   const [customNote, setCustomNote] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -99,7 +99,7 @@ export default function App() {
 
   // Blog Phân Trang
   const [currentBlogPage, setCurrentBlogPage] = useState(1);
-  const POSTS_PER_PAGE = 8; 
+  const POSTS_PER_PAGE = 8;
   const currentPosts = blogPosts.slice((currentBlogPage - 1) * POSTS_PER_PAGE, currentBlogPage * POSTS_PER_PAGE);
   const totalPages = Math.ceil(blogPosts.length / POSTS_PER_PAGE);
 
@@ -128,7 +128,7 @@ export default function App() {
   const deleteSelected = () => {
     if (selectedId !== 'text') {
       setIcons(icons.filter(i => i.id !== selectedId));
-      setSelectedId('text'); 
+      setSelectedId('text');
     }
   };
 
@@ -142,7 +142,7 @@ export default function App() {
   };
 
   const handlePointerDown = (e, id, currentX, currentY) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setSelectedId(id);
     setIsDragging(true);
     dragRef.current = { id, startX: e.clientX, startY: e.clientY, origX: currentX, origY: currentY };
@@ -152,7 +152,7 @@ export default function App() {
   const handlePointerMove = (e) => {
     if (!isDragging || !dragRef.current) return;
     const { id, startX, startY, origX, origY } = dragRef.current;
-    
+
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
 
@@ -162,7 +162,7 @@ export default function App() {
     if (previewRef.current) {
       const boardWidth = previewRef.current.clientWidth;
       const boardHeight = previewRef.current.clientHeight;
-      
+
       const limitX = (boardWidth / 2) - 40;
       const limitY = (boardHeight / 2) - 40;
 
@@ -192,9 +192,9 @@ export default function App() {
       const powerBtn = previewRef.current.querySelector('.power-btn');
       if (powerBtn) powerBtn.style.display = 'none';
       const prevSelected = selectedId;
-      setSelectedId(null); 
+      setSelectedId(null);
 
-      await new Promise(resolve => setTimeout(resolve, 100)); 
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       const canvas = await html2canvas(previewRef.current, { useCORS: true, backgroundColor: '#000', scale: 2 });
 
@@ -223,7 +223,7 @@ export default function App() {
     try {
       await navigator.clipboard.writeText(message);
       alert("✅ Đã copy nội dung!\n\nBạn chỉ cần dán vào Zalo cho nhà sản xuất thôi và nhớ phải tải cả ảnh nhé!");
-    } catch (err) {}
+    } catch (err) { }
     window.location.href = `https://zalo.me/${HOTLINE}?text=${encodeURIComponent(message)}`;
   };
 
@@ -234,7 +234,7 @@ export default function App() {
     try {
       await navigator.clipboard.writeText(message);
       alert("✅ Đã copy thông tin! Bạn dán vào Zalo nhé.");
-    } catch (err) {}
+    } catch (err) { }
     window.location.href = `https://zalo.me/${HOTLINE}?text=${encodeURIComponent(message)}`;
   };
 
@@ -261,21 +261,21 @@ export default function App() {
       backgroundSize: '100% 100%, 100% 100%, 40px 40px, 40px 40px', backgroundAttachment: 'fixed', minHeight: '100vh'
     }}>
       <header className="navbar" style={{ backgroundImage: "linear-gradient(rgba(8, 11, 19, 0.85), rgba(8, 11, 19, 0.85)), url('/header/anhheader.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="logo" onClick={() => {setCurrentPage('home'); setIsMobileMenuOpen(false);}} style={{cursor: 'pointer'}}>
+        <div className="logo" onClick={() => { setCurrentPage('home'); setIsMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
           <Flame className="logo-icon" /><span>NEON<strong>STUDIO</strong></span>
         </div>
         <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
         <nav className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
-          <button className="nav-btn" onClick={() => {setCurrentPage('home'); setIsMobileMenuOpen(false);}}>Trang Chủ</button>
+          <button className="nav-btn" onClick={() => { setCurrentPage('home'); setIsMobileMenuOpen(false); }}>Trang Chủ</button>
           {currentPage === 'home' && (
             <><a href="#services" onClick={() => setIsMobileMenuOpen(false)}>Dịch vụ</a><a href="#showcase" onClick={() => setIsMobileMenuOpen(false)}>Dự án</a><a href="#process" onClick={() => setIsMobileMenuOpen(false)}>Quy trình</a></>
           )}
-          <button className="nav-btn" onClick={() => {setCurrentPage('blog'); setIsMobileMenuOpen(false);}}>
-            <Newspaper size={18} style={{marginRight: '5px'}}/> Blog & Dự Án
+          <button className="nav-btn" onClick={() => { setCurrentPage('blog'); setIsMobileMenuOpen(false); }}>
+            <Newspaper size={18} style={{ marginRight: '5px' }} /> Blog & Dự Án
           </button>
-          <a href="#contact" className="contact-btn" onClick={() => {setCurrentPage('home'); setIsMobileMenuOpen(false);}}>Báo giá ngay</a>
+          <a href="#contact" className="contact-btn" onClick={() => { setCurrentPage('home'); setIsMobileMenuOpen(false); }}>Báo giá ngay</a>
         </nav>
       </header>
 
@@ -305,28 +305,28 @@ export default function App() {
             </div>
 
             <div className="customizer-container">
-              
+
               <div className="preview-section">
-                <div 
-                  ref={previewRef} 
-                  className={`preview-board bg-${bgType}`} 
-                  onPointerDown={() => setSelectedId(null)} 
+                <div
+                  ref={previewRef}
+                  className={`preview-board bg-${bgType}`}
+                  onPointerDown={() => setSelectedId(null)}
                   style={bgType === 'custom' && customBg ? { backgroundImage: `url(${customBg})`, backgroundSize: 'cover', backgroundPosition: 'center', userSelect: 'none' } : { userSelect: 'none' }}
                 >
-                  <button className={`power-btn ${isLightOn ? 'on' : 'off'}`} onPointerDown={(e) => e.stopPropagation()} onClick={(e) => {e.stopPropagation(); setIsLightOn(!isLightOn);}} title="Bật/Tắt điện">
+                  <button className={`power-btn ${isLightOn ? 'on' : 'off'}`} onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setIsLightOn(!isLightOn); }} title="Bật/Tắt điện">
                     <Power size={24} />
                   </button>
 
                   <div className={`neon-preview-wrapper backing-${backing} ${!isLightOn ? 'is-off' : ''} anim-${isLightOn ? animation : 'none'} text-${customColor}`} style={{ position: 'relative', width: '100%', height: '100%' }}>
-                    
+
                     {icons.map((icon) => (
-                      <div 
+                      <div
                         key={icon.id}
                         onPointerDown={(e) => handlePointerDown(e, icon.id, icon.x, icon.y)}
                         onPointerMove={handlePointerMove}
                         onPointerUp={handlePointerUp}
-                        style={{ 
-                          position: 'absolute', 
+                        style={{
+                          position: 'absolute',
                           left: '50%', top: '50%',
                           transform: `translate(calc(-50% + ${icon.x}px), calc(-50% + ${icon.y}px)) scale(${icon.scale}) rotate(${icon.rotate}deg)`,
                           cursor: isDragging && selectedId === icon.id ? 'grabbing' : 'pointer',
@@ -339,7 +339,7 @@ export default function App() {
                         }}
                       >
                         {icon.type === 'lucide' ? (
-                          ICON_LIBRARY.find(item => item.name === icon.name)?.icon && 
+                          ICON_LIBRARY.find(item => item.name === icon.name)?.icon &&
                           React.createElement(ICON_LIBRARY.find(item => item.name === icon.name).icon, { size: 64, className: "neon-icon" })
                         ) : (
                           <img src={icon.url} alt="Upload" className="uploaded-neon-img" draggable="false" />
@@ -347,15 +347,15 @@ export default function App() {
                       </div>
                     ))}
 
-                    <div 
+                    <div
                       onPointerDown={(e) => handlePointerDown(e, 'text', textTransform.x, textTransform.y)}
                       onPointerMove={handlePointerMove}
                       onPointerUp={handlePointerUp}
-                      className="neon-preview-text" 
-                      style={{ 
+                      className="neon-preview-text"
+                      style={{
                         position: 'absolute',
                         left: '50%', top: '50%',
-                        fontFamily: `"${customFont}", sans-serif`, 
+                        fontFamily: `"${customFont}", sans-serif`,
                         transform: `translate(calc(-50% + ${textTransform.x}px), calc(-50% + ${textTransform.y}px)) scale(${textTransform.scale}) rotate(${textTransform.rotate}deg)`,
                         cursor: isDragging && selectedId === 'text' ? 'grabbing' : 'pointer',
                         touchAction: 'none',
@@ -376,11 +376,11 @@ export default function App() {
                 <div className="control-group" style={{ background: 'rgba(0,240,255,0.05)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(0,240,255,0.2)', marginTop: '5px', marginBottom: '15px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                     <label style={{ color: '#fff', margin: 0, fontWeight: 'bold' }}>
-                      <span style={{color: 'var(--neon-cyan)'}}>ĐANG CHỈNH SỬA:</span> <span style={{ color: 'var(--neon-pink)', textTransform: 'uppercase'}}>{selectedId === 'text' ? 'Dòng chữ' : (selectedId ? 'Hình ảnh' : 'Chưa chọn vật thể')}</span>
+                      <span style={{ color: 'var(--neon-cyan)' }}>ĐANG CHỈNH SỬA:</span> <span style={{ color: 'var(--neon-pink)', textTransform: 'uppercase' }}>{selectedId === 'text' ? 'Dòng chữ' : (selectedId ? 'Hình ảnh' : 'Chưa chọn vật thể')}</span>
                     </label>
                     {selectedId && selectedId !== 'text' && (
                       <button onClick={deleteSelected} style={{ background: 'rgba(255,0,0,0.2)', border: '1px solid rgba(255,0,0,0.4)', color: '#ff4d4d', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
-                        <Trash2 size={16}/> Xóa
+                        <Trash2 size={16} /> Xóa
                       </button>
                     )}
                   </div>
@@ -409,7 +409,7 @@ export default function App() {
                     <button className={bgType === 'concrete' ? 'active' : ''} onClick={() => setBgType('concrete')}>Bê tông</button>
                     <button className={bgType === 'dark' ? 'active' : ''} onClick={() => setBgType('dark')}>Tối giản</button>
                     <label className={`tool-btn-upload ${bgType === 'custom' ? 'active' : ''}`}>
-                      <ImageIcon size={14} style={{marginRight: 4}}/> Ướm tường nhà
+                      <ImageIcon size={14} style={{ marginRight: 4 }} /> Ướm tường nhà
                       <input type="file" accept="image/*" onChange={(e) => {
                         const file = e.target.files[0];
                         if (file) { setCustomBg(URL.createObjectURL(file)); setBgType('custom'); }
@@ -433,7 +433,7 @@ export default function App() {
               </div>
 
               <div className="controls-board">
-                
+
                 <div className="control-group">
                   <label>1. Sửa nội dung chữ Neon:</label>
                   <input type="text" maxLength="25" value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder="VD: Quán Của Tuấn" onClick={() => setSelectedId('text')} />
@@ -442,13 +442,13 @@ export default function App() {
                 <div className="control-group" style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                   <label style={{ color: 'var(--neon-yellow)', fontWeight: 'bold' }}>2. THÊM HÌNH VÀO BẢNG:</label>
                   <div className="icon-picker">
-                    <button 
+                    <button
                       type="button"
-                      className={`icon-btn ${showIconLibrary ? 'active' : ''}`} 
+                      className={`icon-btn ${showIconLibrary ? 'active' : ''}`}
                       onClick={() => setShowIconLibrary(!showIconLibrary)}
-                      style={{background: showIconLibrary ? 'var(--neon-purple)' : '#1e293b', color: '#fff', border: '1px solid var(--border-color)'}}
+                      style={{ background: showIconLibrary ? 'var(--neon-purple)' : '#1e293b', color: '#fff', border: '1px solid var(--border-color)' }}
                     >
-                      <Sparkles size={18}/> Mở Kho Icon (40+) {showIconLibrary ? '▲' : '▼'}
+                      <Sparkles size={18} /> Mở Kho Icon (40+) {showIconLibrary ? '▲' : '▼'}
                     </button>
 
                     <label className="icon-btn upload-btn">
@@ -489,7 +489,32 @@ export default function App() {
                 <div className="control-group">
                   <label>4. Chọn phông chữ nghệ thuật (Kéo xuống để xem):</label>
                   <select value={customFont} onChange={(e) => setCustomFont(e.target.value)} style={{ maxHeight: '200px' }}>
-                    
+                    {/* 👇 ĐÂY LÀ NHÓM FONT TỪ MÁY TÍNH CỦA BẠN MỚI THÊM VÀO 👇 */}
+                    <optgroup label="💎 Font Độc Quyền Xưởng (Đẹp nhất)">
+                      <option value="LoveNeon">LoveNeon (Chuyên Neon)</option>
+                      <option value="NeonTubes2">Neon Tubes 2 (Ống Neon kép)</option>
+                      <option value="Neon Light">Neon Light (Thanh mảnh)</option>
+                      <option value="Neonballroom">Neon Ballroom (Cổ điển)</option>
+                      <option value="Neon">Neon (Cơ bản)</option>
+                      <option value="Neoneon">Neoneon (Viền kép)</option>
+                      <option value="Autography">Autography (Chữ ký tay)</option>
+                      <option value="NVN Motherland">NVN Motherland (Chữ ký Việt Hóa)</option>
+                      <option value="Beachfront">Beachfront (Phóng khoáng)</option>
+                      <option value="Babyhome">Babyhome (Mềm mại dễ thương)</option>
+                      <option value="Bayview">Bayview (Nét thanh nét đậm)</option>
+                      <option value="Bellarina">Bellarina (Nữ tính)</option>
+                      <option value="Fz Presidente">Fz Presidente (Sang trọng)</option>
+                      <option value="Fz Photograph">Fz Photograph (Thơ mộng)</option>
+                      <option value="VL Agile Script">VL Agile Script (Nét bút lông)</option>
+                      {/* --- 8 Font bổ sung từ thư mục của bạn --- */}
+                      <option value="1FTV-VIP-Batterlett">1FTV VIP Batterlett (Cách điệu)</option>
+                      <option value="Alexz">Alexz (Cá tính)</option>
+                      <option value="Beauty Style">Beauty Style (Thanh lịch)</option>
+                      <option value="HLT AphroditeSlimPro">HLT Aphrodite (Nghệ thuật)</option>
+                      <option value="VLAMPLE">VL Ample (Đậm đà)</option>
+                      <option value="Aristotelica">Aristotelica (Khối tròn hiện đại)</option>
+                    </optgroup>
+                    {/* 👆 KẾT THÚC NHÓM FONT TỰ THÊM 👆 */}
                     <optgroup label="✨ CHỮ UỐN DẺO & NGHỆ THUẬT">
                       <option value="Dancing Script">Dancing Script (Mềm mại)</option>
                       <option value="Pacifico">Pacifico (Đậm đà)</option>
@@ -583,13 +608,13 @@ export default function App() {
                   <textarea rows="2" value={customNote} onChange={(e) => setCustomNote(e.target.value)} placeholder="VD: Mình muốn làm ngang 1 mét..." style={{ marginBottom: '10px' }}></textarea>
                   <input type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Nhập SĐT / Zalo của bạn..." style={{ borderColor: !customerPhone ? 'var(--neon-pink)' : 'var(--border-color)' }} />
                 </div>
-                
+
                 <div style={{ backgroundColor: 'rgba(255, 234, 0, 0.08)', borderLeft: '4px solid var(--neon-yellow)', padding: '12px', fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '15px', borderRadius: '4px', lineHeight: '1.5' }}>
-                  <strong style={{color: 'var(--neon-yellow)'}}>💡 LƯU Ý QUAN TRỌNG:</strong> Quý khách vui lòng bấm <b>"Tải Ảnh Thiết Kế"</b> về máy trước, sau đó đính kèm bức ảnh vừa tải vào tin nhắn Zalo để xưởng báo giá nhé!
+                  <strong style={{ color: 'var(--neon-yellow)' }}>💡 LƯU Ý QUAN TRỌNG:</strong> Quý khách vui lòng bấm <b>"Tải Ảnh Thiết Kế"</b> về máy trước, sau đó đính kèm bức ảnh vừa tải vào tin nhắn Zalo để xưởng báo giá nhé!
                 </div>
 
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  <button className="btn" onClick={handleDownloadDesign} style={{ flex: 1, backgroundColor: '#1e293b', border: '1px solid var(--border-color)', color: '#fff', fontSize: '0.9rem', justifyContent: 'center' }}><Download size={18}/> Tải Ảnh Thiết Kế</button>
+                  <button className="btn" onClick={handleDownloadDesign} style={{ flex: 1, backgroundColor: '#1e293b', border: '1px solid var(--border-color)', color: '#fff', fontSize: '0.9rem', justifyContent: 'center' }}><Download size={18} /> Tải Ảnh Thiết Kế</button>
                   <button className="btn btn-submit" onClick={handleSendToZalo} style={{ flex: 1, marginTop: '0', fontSize: '0.9rem', justifyContent: 'center' }}>Gửi & Chốt Zalo</button>
                 </div>
               </div>
@@ -642,13 +667,13 @@ export default function App() {
               </div>
               <div className="form-right">
                 <form onSubmit={handleSubmitContactForm} className="contact-form">
-                  <input type="text" placeholder="Họ và tên..." value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
-                  <input type="tel" placeholder="Số điện thoại / Zalo..." value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} required />
-                  <select value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})}>
+                  <input type="text" placeholder="Họ và tên..." value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+                  <input type="tel" placeholder="Số điện thoại / Zalo..." value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} required />
+                  <select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
                     <option value="Làm theo yêu cầu tự điền">Làm theo yêu cầu tự điền</option>
                     <option value="Tư vấn mẫu có sẵn trên web">Tư vấn mẫu có sẵn trên web</option>
                   </select>
-                  <textarea rows="3" placeholder="Nội dung muốn làm..." value={formData.request} onChange={(e) => setFormData({...formData, request: e.target.value})}></textarea>
+                  <textarea rows="3" placeholder="Nội dung muốn làm..." value={formData.request} onChange={(e) => setFormData({ ...formData, request: e.target.value })}></textarea>
                   <button type="submit" className="btn btn-submit">Gửi Yêu Cầu Tư Vấn Qua Zalo</button>
                 </form>
               </div>
@@ -668,10 +693,10 @@ export default function App() {
                 <div className="blog-content">
                   <span className="blog-date">{post.date}</span><h3 className="blog-title">{post.title}</h3><p className="blog-excerpt">{post.excerpt}</p>
                   <button className="read-more-btn" onClick={() => {
-                      setFormData({...formData, type: 'Tư vấn mẫu có sẵn trên web', request: `Tôi muốn tư vấn về mẫu trong bài viết: "${post.title}"`});
-                      setCurrentPage('home');
-                      setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 100);
-                    }}>Tư vấn mẫu này</button>
+                    setFormData({ ...formData, type: 'Tư vấn mẫu có sẵn trên web', request: `Tôi muốn tư vấn về mẫu trong bài viết: "${post.title}"` });
+                    setCurrentPage('home');
+                    setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 100);
+                  }}>Tư vấn mẫu này</button>
                 </div>
               </div>
             ))}
@@ -679,7 +704,7 @@ export default function App() {
           {totalPages > 1 && (
             <div className="pagination">
               {Array.from({ length: totalPages }, (_, index) => (
-                <button key={index + 1} onClick={() => {setCurrentBlogPage(index + 1); window.scrollTo({ top: 0, behavior: 'smooth' });}} className={`page-btn ${currentBlogPage === index + 1 ? 'active' : ''}`}>{index + 1}</button>
+                <button key={index + 1} onClick={() => { setCurrentBlogPage(index + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`page-btn ${currentBlogPage === index + 1 ? 'active' : ''}`}>{index + 1}</button>
               ))}
             </div>
           )}

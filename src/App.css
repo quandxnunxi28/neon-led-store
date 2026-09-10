@@ -1,5 +1,99 @@
 @import url('https://fonts.googleapis.com/css2?family=Allura&family=Audiowide&family=Bebas+Neue&family=Caveat:wght@700&family=Comfortaa:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Monoton&family=Montserrat:wght@800&family=Mr+Dafoe&family=Pacifico&family=Parisienne&family=Permanent+Marker&family=Press+Start+2P&family=Righteous&family=Sacramento&family=Satisfy&family=Yellowtail&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Alfa+Slab+One&family=Allura&family=Anton&family=Arizonia&family=Audiowide&family=Bad+Script&family=Bangers&family=Bebas+Neue&family=Berkshire+Swash&family=Black+Ops+One&family=Bungee&family=Bungee+Shade&family=Caveat:wght@700&family=Changa+One&family=Clicker+Script&family=Comfortaa:wght@700&family=Cookie&family=Courgette&family=Creepster&family=Damion&family=Dancing+Script:wght@700&family=DotGothic16&family=Ewert&family=Faster+One&family=Francois+One&family=Frijole&family=Fugaz+One&family=Great+Vibes&family=Homemade+Apple&family=Italianno&family=Just+Another+Hand&family=Kaushan+Script&family=Knewave&family=Leckerli+One&family=Lobster&family=Marck+Script&family=Megrim&family=Monoton&family=Montserrat:wght@800&family=Mr+Dafoe&family=Mr+De+Haviland&family=Nosifer&family=Nothing+You+Could+Do&family=Ole&family=Orbitron:wght@700&family=Oswald:wght@700&family=Pacifico&family=Parisienne&family=Paytone+One&family=Permanent+Marker&family=Pinyon+Script&family=Poppins:wght@700&family=Press+Start+2P&family=Qwigley&family=Rancho&family=Righteous&family=Roboto:wght@900&family=Rochester&family=Rouge+Script&family=Russo+One&family=Sacramento&family=Satisfy&family=Shadows+Into+Light&family=Sigmar+One&family=Silkscreen&family=Syncopate:wght@700&family=Tangerine:wght@700&family=Titan+One&family=Turret+Road:wght@800&family=VT323&family=Vibur&family=Wallpoet&family=Yellowtail&family=Yesteryear&family=Zeyada&display=swap');
+/* --- CÁC FONT ĐỘC QUYỀN TỰ THÊM TỪ MÁY TÍNH --- */
+/* ==========================================
+   KHO FONT CHỮ ĐỘC QUYỀN (21 FONT TỪ THƯ MỤC CỦA BẠN)
+   ========================================== */
+
+@font-face {
+  font-family: 'Autography';
+  src: url('/fonts/Autography.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Babyhome';
+  src: url('/fonts/Babyhome.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Bayview';
+  src: url('/fonts/Bayview.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Beachfront';
+  src: url('/fonts/Beachfront.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Bellarina';
+  src: url('/fonts/Bellarina.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Fz Presidente';
+  src: url('/fonts/Fz Presidente.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Fz Photograph';
+  src: url('/fonts/Fz-Photograph.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'LoveNeon';
+  src: url('/fonts/LoveNeon.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Neon Light';
+  src: url('/fonts/Neon Light.otf') format('opentype');
+}
+@font-face {
+  font-family: 'NeonTubes2';
+  src: url('/fonts/NeonTubes2.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Neonballroom';
+  src: url('/fonts/Neonballroom.otf') format('opentype');
+}
+@font-face {
+  font-family: 'NVN Motherland';
+  src: url('/fonts/NVN-MOTHERLAND-SIGNATURE.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'VL Agile Script';
+  src: url('/fonts/VLAGILESCRIPTCALLIGRAPHY.OTF') format('opentype');
+}
+
+/* --- 8 FONT CÒN THIẾU TỪ BỨC ẢNH CỦA BẠN --- */
+
+@font-face {
+  font-family: 'Neon';
+  src: url('/fonts/Neon.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Neoneon';
+  src: url('/fonts/Neoneon-3zaD6.otf') format('opentype');
+}
+@font-face {
+  font-family: '1FTV-VIP-Batterlett';
+  src: url('/fonts/1FTV-VIP-Betterlett.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Alexa';
+  src: url('/fonts/Alexa.d509bee2 (1).ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Beauty Style';
+  src: url('/fonts/Beauty Style Beauty Style US Light.otf') format('opentype');
+}
+@font-face {
+  font-family: 'HLT AphroditeSlimPro';
+  src: url('/fonts/HLT AphroditeSlimPro.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'VLAMPLE';
+  src: url('/fonts/VLAMPLE.OTF') format('opentype');
+}
+@font-face {
+  font-family: 'Aristotelica';
+  /* QUAN TRỌNG: Trong ảnh của bạn, tên file này bị dài quá nên ẩn mất đuôi. 
+     Bạn cần kiểm tra lại chính xác tên file trong thư mục fonts và sửa lại đuôi .ttf hoặc .otf ở dòng dưới nhé! */
+  src: url('/fonts/zetafonts-aristotelica-pro-display-extralight.otf') format('truetype');
+}
 :root {
   --bg-dark: #080b13;
   --bg-card: #111827;
