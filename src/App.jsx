@@ -69,7 +69,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const previewRef = useRef(null);
   
-  // --- STATE QUẢN LÝ VẬT THỂ (KÉO THẢ DRAG & DROP) ---
+  // --- STATE QUẢN LÝ VẬT THỂ ---
   const [selectedId, setSelectedId] = useState('text'); 
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef(null);
@@ -80,7 +80,7 @@ export default function App() {
   const [customFont, setCustomFont] = useState('Dancing Script');
   const [textTransform, setTextTransform] = useState({ x: 0, y: 50, scale: 1, rotate: 0 });
 
-  // 2. Quản lý Mảng Hình Ảnh / Icon 
+  // 2. Quản lý Hình Ảnh
   const [icons, setIcons] = useState([
     { id: 'icon_init', type: 'lucide', name: 'Feather', x: 0, y: -50, scale: 1, rotate: 0 }
   ]); 
@@ -222,7 +222,6 @@ export default function App() {
 
     try {
       await navigator.clipboard.writeText(message);
-      // ĐÃ SỬA LẠI CÂU THÔNG BÁO TẠI ĐÂY THEO ĐÚNG YÊU CẦU CỦA BẠN
       alert("✅ Đã copy nội dung!\n\nBạn chỉ cần dán vào Zalo cho nhà sản xuất thôi và nhớ phải tải cả ảnh nhé!");
     } catch (err) {}
     window.location.href = `https://zalo.me/${HOTLINE}?text=${encodeURIComponent(message)}`;
@@ -356,7 +355,7 @@ export default function App() {
                       style={{ 
                         position: 'absolute',
                         left: '50%', top: '50%',
-                        fontFamily: `"${customFont}", cursive`, 
+                        fontFamily: `"${customFont}", sans-serif`, 
                         transform: `translate(calc(-50% + ${textTransform.x}px), calc(-50% + ${textTransform.y}px)) scale(${textTransform.scale}) rotate(${textTransform.rotate}deg)`,
                         cursor: isDragging && selectedId === 'text' ? 'grabbing' : 'pointer',
                         touchAction: 'none',
@@ -486,19 +485,96 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* --- KHO TÀNG 80+ FONT CHỮ --- */}
                 <div className="control-group">
-                  <label>4. Chọn phông chữ nghệ thuật:</label>
-                  <select value={customFont} onChange={(e) => setCustomFont(e.target.value)}>
-                    <option value="Dancing Script">Dancing Script (Mềm mại)</option>
-                    <option value="Pacifico">Pacifico (Đậm đà)</option>
-                    <option value="Vibur">Vibur (Cổ điển)</option>
-                    <option value="Caveat">Caveat (Phá cách)</option>
-                    <option value="Cookie">Cookie (Dễ thương)</option>
-                    <option value="Great Vibes">Great Vibes (Sang trọng)</option>
-                    <option value="Kaushan Script">Kaushan Script (Cứng cáp)</option>
-                    <option value="Sacramento">Sacramento (Thanh mảnh)</option>
-                    <option value="Satisfy">Satisfy (Bay bổng)</option>
-                    <option value="Yellowtail">Yellowtail (Độc đáo)</option>
+                  <label>4. Chọn phông chữ nghệ thuật (Kéo xuống để xem):</label>
+                  <select value={customFont} onChange={(e) => setCustomFont(e.target.value)} style={{ maxHeight: '200px' }}>
+                    
+                    <optgroup label="✨ CHỮ UỐN DẺO & NGHỆ THUẬT">
+                      <option value="Dancing Script">Dancing Script (Mềm mại)</option>
+                      <option value="Pacifico">Pacifico (Đậm đà)</option>
+                      <option value="Great Vibes">Great Vibes (Sang trọng)</option>
+                      <option value="Caveat">Caveat (Phá cách)</option>
+                      <option value="Sacramento">Sacramento (Thanh mảnh)</option>
+                      <option value="Satisfy">Satisfy (Bay bổng)</option>
+                      <option value="Parisienne">Parisienne (Cổ điển Pháp)</option>
+                      <option value="Mr Dafoe">Mr Dafoe (Ký tự xước)</option>
+                      <option value="Yellowtail">Yellowtail (Độc đáo)</option>
+                      <option value="Lobster">Lobster (Dày dặn)</option>
+                      <option value="Vibur">Vibur (Cổ điển)</option>
+                      <option value="Alex Brush">Alex Brush (Cọ vẽ)</option>
+                      <option value="Allura">Allura (Lịch thiệp)</option>
+                      <option value="Arizonia">Arizonia (Mượt mà)</option>
+                      <option value="Bad Script">Bad Script (Viết tay)</option>
+                      <option value="Berkshire Swash">Berkshire Swash (Cổ tích)</option>
+                      <option value="Clicker Script">Clicker Script (Mảnh sắc)</option>
+                      <option value="Cookie">Cookie (Dễ thương)</option>
+                      <option value="Courgette">Courgette (Nghiêng tròn)</option>
+                      <option value="Damion">Damion (Nét liền)</option>
+                      <option value="Homemade Apple">Homemade Apple (Viết tay chì)</option>
+                      <option value="Italianno">Italianno (Quý phái)</option>
+                      <option value="Just Another Hand">Just Another Hand (Ghi chú)</option>
+                      <option value="Kaushan Script">Kaushan Script (Cứng cáp)</option>
+                      <option value="Leckerli One">Leckerli One (Vui nhộn)</option>
+                      <option value="Marck Script">Marck Script (Bút mực)</option>
+                      <option value="Mr De Haviland">Mr De Haviland (Rối ren nghệ thuật)</option>
+                      <option value="Nothing You Could Do">Nothing You Could Do (Viết tay vội)</option>
+                      <option value="Ole">Ole (Đậm phong cách)</option>
+                      <option value="Pinyon Script">Pinyon Script (Quý tộc)</option>
+                      <option value="Qwigley">Qwigley (Đuôi dài)</option>
+                      <option value="Rancho">Rancho (Cao bồi)</option>
+                      <option value="Rochester">Rochester (Chững chạc)</option>
+                      <option value="Rouge Script">Rouge Script (Son môi)</option>
+                      <option value="Shadows Into Light">Shadows Into Light (Gọn gàng)</option>
+                      <option value="Tangerine">Tangerine (Mảnh mai cao)</option>
+                      <option value="Yesteryear">Yesteryear (Hoài cổ)</option>
+                      <option value="Zeyada">Zeyada (Viết tay xéo)</option>
+                    </optgroup>
+
+                    <optgroup label="🚀 CHỮ KHỐI, BẢNG HIỆU & HIỆN ĐẠI">
+                      <option value="Montserrat">Montserrat (Chuẩn mực)</option>
+                      <option value="Bebas Neue">Bebas Neue (Cao cứng)</option>
+                      <option value="Comfortaa">Comfortaa (Bo tròn hiện đại)</option>
+                      <option value="Righteous">Righteous (Tương lai)</option>
+                      <option value="Anton">Anton (Dày đặc)</option>
+                      <option value="Oswald">Oswald (Cao vuông)</option>
+                      <option value="Poppins">Poppins (Tròn trịa)</option>
+                      <option value="Roboto">Roboto (Cơ bản khối)</option>
+                      <option value="Alfa Slab One">Alfa Slab One (Khối siêu đậm)</option>
+                      <option value="Changa One">Changa One (Khối vuông vức)</option>
+                      <option value="Francois One">Francois One (Khối gọn)</option>
+                      <option value="Fugaz One">Fugaz One (Tốc độ, nghiêng)</option>
+                      <option value="Knewave">Knewave (Khối sơn quẹt)</option>
+                      <option value="Paytone One">Paytone One (Bo tròn mập)</option>
+                      <option value="Russo One">Russo One (Khối hộp Nga)</option>
+                      <option value="Syncopate">Syncopate (Mở rộng, dẹt)</option>
+                      <option value="Titan One">Titan One (Bong bóng)</option>
+                    </optgroup>
+
+                    <optgroup label="🔥 CHỮ ĐỘC LẠ, GAMING & CYBERPUNK">
+                      <option value="Monoton">Monoton (Kẻ sọc Neon bản lớn)</option>
+                      <option value="Audiowide">Audiowide (Viễn tưởng)</option>
+                      <option value="Permanent Marker">Permanent Marker (Bút dạ)</option>
+                      <option value="Press Start 2P">Press Start 2P (Pixel Arcade)</option>
+                      <option value="Bangers">Bangers (Truyện tranh)</option>
+                      <option value="Black Ops One">Black Ops One (Quân đội xước)</option>
+                      <option value="Bungee">Bungee (Khối dọc đô thị)</option>
+                      <option value="Bungee Shade">Bungee Shade (Đổ bóng 3D)</option>
+                      <option value="Creepster">Creepster (Halloween / Rùng rợn)</option>
+                      <option value="DotGothic16">DotGothic16 (Bảng điện tử)</option>
+                      <option value="Ewert">Ewert (Chữ chân rết)</option>
+                      <option value="Faster One">Faster One (Tốc độ ánh sáng)</option>
+                      <option value="Frijole">Frijole (Lộn xộn / Rối)</option>
+                      <option value="Megrim">Megrim (Nét mỏng kỹ thuật)</option>
+                      <option value="Nosifer">Nosifer (Chữ chảy máu)</option>
+                      <option value="Orbitron">Orbitron (Robot / Sci-Fi)</option>
+                      <option value="Sigmar One">Sigmar One (Khí cầu khổng lồ)</option>
+                      <option value="Silkscreen">Silkscreen (Pixel mini)</option>
+                      <option value="Turret Road">Turret Road (Kỹ thuật số)</option>
+                      <option value="VT323">VT323 (Terminal Retro)</option>
+                      <option value="Wallpoet">Wallpoet (Stencil in xước)</option>
+                    </optgroup>
+
                   </select>
                 </div>
 
